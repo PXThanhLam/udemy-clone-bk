@@ -18,8 +18,7 @@ DROP TABLE IF EXISTS tbl_RESOURCE;
 DROP TABLE IF EXISTS tbl_ASSIGNMENT_QUIZ;
 DROP TABLE IF EXISTS tbl_ASSIGNMENT;
 DROP TABLE IF EXISTS tbl_CODING_EXERCISE;
-DROP TABLE IF EXISTS tbl_WRONG_ANSWER;
-DROP TABLE IF EXISTS tbl_RIGHT_ANSWER;
+DROP TABLE IF EXISTS tbl_QUIZ_ANSWER;
 DROP TABLE IF EXISTS tbl_QUIZ;
 DROP TABLE IF EXISTS tbl_PTQ;
 DROP TABLE IF EXISTS tbl_ARTICAL;
@@ -80,7 +79,7 @@ CREATE TABLE IF NOT EXISTS tbl_SUBCATEGORY (
 CREATE TABLE IF NOT EXISTS tbl_COURSE (
 	id 					INT UNSIGNED	NOT NULL AUTO_INCREMENT,
 	main_title 			VARCHAR(256) 	NOT NULL 	DEFAULT "Default Main Title",
-	sub_title 			VARCHAR(256) 	NOT NULL 	DEFAULT "Defult Sub Title",
+	sub_title 			VARCHAR(256)  	DEFAULT "Defult Sub Title",
 	description 		LONGTEXT,
 	publish_status 		BOOL 			NOT NULL 	DEFAULT FALSE,
 	promotional_video 	VARCHAR(256),
@@ -88,7 +87,7 @@ CREATE TABLE IF NOT EXISTS tbl_COURSE (
 	course_language 	VARCHAR(64) 	NOT NULL 	DEFAULT "English",
 	course_level 		ENUM('Beginner', 'Intermidate', 'Expert', 'All Levels') NOT NULL DEFAULT 'All Levels',
 	price 				DECIMAL(10,2) 	NOT NULL 	DEFAULT 0.00,
-	welcome_message 	TEXT 			NOT NULL,
+	welcome_message 	TEXT,
 	owner_id 			INT UNSIGNED	NOT NULL,
 	sub_category_id 	INT UNSIGNED	NOT NULL,
 	updated_date 		TIMESTAMP		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -219,24 +218,14 @@ CREATE TABLE IF NOT EXISTS tbl_QUIZ (
 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_PTQ(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- 																RIGHT_ANSWER
-CREATE TABLE IF NOT EXISTS tbl_RIGHT_ANSWER (
+CREATE TABLE IF NOT EXISTS tbl_QUIZ_ANSWER (
 	quiz_id		INT UNSIGNED NOT NULL,
 	item_id		INT UNSIGNED NOT NULL,
 	course_id	INT UNSIGNED NOT NULL,
 	content		VARCHAR(512) NOT NULL,
-	
+	rightness	BOOL NOT NULL,
 	PRIMARY KEY (quiz_id, item_id, course_id, content),
 	FOREIGN KEY (quiz_id, item_id, course_id) REFERENCES tbl_QUIZ(id, item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
--- 																WRONG_ANSWER
-CREATE TABLE IF NOT EXISTS tbl_WRONG_ANSWER (
-	quiz_id		INT UNSIGNED NOT NULL,
-	item_id		INT UNSIGNED NOT NULL,
-	course_id	INT UNSIGNED NOT NULL,
-	content		VARCHAR(512) NOT NULL,
-	
-	PRIMARY KEY (quiz_id, item_id, course_id, content),
-	FOREIGN KEY (quiz_id, item_id, course_id) REFERENCES tbl_QUIZ(id, item_id, course_id)  ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- 																CODING_EXERCISE
 CREATE TABLE IF NOT EXISTS tbl_CODING_EXERCISE (
