@@ -358,11 +358,12 @@ CREATE TABLE IF NOT EXISTS tbl_QUESTION (
 );
 -- 																ANSWER
 CREATE TABLE IF NOT EXISTS tbl_ANSWER (
+	id				INT UNSIGNED NOT NULL auto_increment,
 	question_id		INT UNSIGNED NOT NULL,
 	user_id			INT UNSIGNED NOT NULL,
 	content			LONGTEXT,
 	created_date	TIMESTAMP,
-	PRIMARY KEY (question_id, user_id),
+	PRIMARY KEY (question_id, id),
 	FOREIGN KEY (question_id) REFERENCES tbl_QUESTION(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
