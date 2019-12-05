@@ -10,12 +10,8 @@ CREATE PROCEDURE insertUser(
     in lname VARCHAR(128)
 )
 BEGIN
-	IF (pw REGEXP '.*[0-9].*'  and pw REGEXP '.*[A-Za-z].*' and pw REGEXP "[^ ]*[!@#$%^&'][^ ]*" and CHAR_LENGTH(pw) >= 8)  THEN
-		INSERT INTO tbl_USER(email, password, first_name, last_name)
-		VALUES (em, SHA2(pw, 256), fname, lname);
-	ELSE SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT='Password must contains at least a number, an alphabetical character and a special character';
-    END IF;
+	INSERT INTO tbl_USER(email, password, first_name, last_name)
+	VALUES (em, pw, fname, lname);
 END
 $$
 CREATE PROCEDURE insertCategory(
@@ -61,11 +57,65 @@ BEGIN
 		IFNULL(arg_course_language,DEFAULT(course_language)), IFNULL(arg_course_level,DEFAULT(course_level)), IFNULL(arg_price,DEFAULT(price)), arg_welcome_message, arg_owner_id, 
         arg_sub_category_id);
 	SET last_course_id=LAST_INSERT_ID();
-	#INSERT INTO tbl_TEACH
-    #VALUES (arg_owner_id, last_course_id);
 	IF arg_topic IS NOT NULL THEN
 		INSERT INTO tbl_COURSE_TOPIC
 		VALUES (last_course_id, arg_topic);
 	END IF;
 END
 $$
+
+CREATE PROCEDURE message(
+	arg_from_id INT UNSIGNED,
+    arg_to_id INT UNSIGNED,
+    arg_content LONGTEXT
+)
+BEGIN 
+	INSERT INTO tbl_MESSAGE(from_id, to_id, content)
+    VALUES (arg_from_id, arg_to_id, arg_content);
+END
+$$
+CREATE PROCEDURE insertTeacher(
+	arg_instructor_id INT UNSIGNED,
+    arg_course_id INT UNSIGNED,
+    arg_permission BIT(8)
+)
+BEGIN
+	INSERT INTO tbl_TEACH(instructor_id, course_id, permission)
+    VALUES (arg_instructor_id, arg_course_id, arg_permssion);
+END
+$$
+CREATE PROCEDURE insertAnnouncement(
+    arg_course_id INT UNSIGNED,
+	arg_instructor_id INT UNSIGNED,
+    arg_content TEXT
+)
+BEGIN
+	INSERT INTO tbl_ANNOUNCEMENT(course_id, instructor_id, content)
+    VALUES (arg_course_id, arg_instructor_id, arg_content);
+END
+$$
+CREATE PROCEDURE insertAnnouncement(
+    arg_course_id INT UNSIGNED,
+	arg_instructor_id INT UNSIGNED,
+    arg_content TEXT
+)
+BEGIN
+	INSERT INTO tbl_ANNOUNCEMENT(course_id, instructor_id, content)
+    VALUES (arg_course_id, arg_instructor_id, arg_content);
+END
+$$
+CREATE PROCEDURE insertSection(
+	arg_course_id INT UNSIGNED,
+    arg_section_name VARCHAR(256),
+	arg_section_order INT UNSIGNED
+)
+BEGIN
+	IF arg_section_order IS NULL THEN
+		SELECT COUNT(*)+1 INTO arg_section_order
+        FROM tbl_SECTION, tbl_COURSE
+        WHERE id=course_id;
+	END IF;
+    INSERT INTO tbl_section(course_id, name, section_order)
+    VALUES (arg_course_id, arg_section_name, arg_section_order);
+END
+
