@@ -44,10 +44,11 @@ CREATE PROCEDURE insertCourse(
     IN arg_price DECIMAL(10,2),
     IN arg_welcome_message TEXT,
     IN owner_email VARCHAR(256),
-    IN sub_category_name VARCHAR(256)
+    IN sub_category_name VARCHAR(256),
+	IN arg_topic VARCHAR(256)
 )
 BEGIN
-	DECLARE arg_owner_id, arg_sub_category_id INT UNSIGNED;
+	DECLARE arg_owner_id, arg_sub_category_id, last_course_id INT UNSIGNED;
     SELECT id INTO arg_owner_id
     FROM tbl_USER
     WHERE email=owner_email;
@@ -59,5 +60,12 @@ BEGIN
 	VALUES (arg_main_title, arg_sub_title, arg_description, arg_promotional_video, arg_image,
 		IFNULL(arg_course_language,DEFAULT(course_language)), IFNULL(arg_course_level,DEFAULT(course_level)), IFNULL(arg_price,DEFAULT(price)), arg_welcome_message, arg_owner_id, 
         arg_sub_category_id);
+	SET last_course_id=LAST_INSERT_ID();
+	#INSERT INTO tbl_TEACH
+    #VALUES (arg_owner_id, last_course_id);
+	IF arg_topic IS NOT NULL THEN
+		INSERT INTO tbl_COURSE_TOPIC
+		VALUES (last_course_id, arg_topic);
+	END IF;
 END
 $$
