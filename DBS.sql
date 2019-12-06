@@ -120,7 +120,9 @@ CREATE TABLE IF NOT EXISTS tbl_ANNOUNCEMENT (
 CREATE TABLE IF NOT EXISTS tbl_ITEM (
 	item_id 	INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	course_id	INT UNSIGNED NOT NULL,
+    name 		VARCHAR(256) NOT NULL,
 	PRIMARY KEY (item_id, course_id),
+    UNIQUE(item_id, name),
 	FOREIGN KEY (course_id) REFERENCES tbl_COURSE(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- 																SECTION
@@ -150,7 +152,6 @@ CREATE TABLE IF NOT EXISTS tbl_COMPOSE (
 CREATE TABLE IF NOT EXISTS tbl_LECTURE (
 	item_id				INT UNSIGNED NOT NULL,
 	course_id 			INT UNSIGNED NOT NULL,
-	name				VARCHAR(256) NOT NULL 	DEFAULT "Default Lecture's name",
 	PRIMARY KEY (item_id, course_id),
     FOREIGN KEY (item_id, course_id) REFERENCES tbl_ITEM(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -199,7 +200,6 @@ CREATE TABLE IF NOT EXISTS tbl_ARTICAL (
 CREATE TABLE IF NOT EXISTS tbl_PTQ (
 	item_id			INT UNSIGNED NOT NULL,
 	course_id 		INT UNSIGNED NOT NULL,
-	title			VARCHAR(256) NOT NULL DEFAULT "Default PTQ's title",
 	minimum_score	FLOAT NOT NULL DEFAULT 0.0,
 	is_randomize	BOOL NOT NULL DEFAULT FALSE,
 	duration		DECIMAL(5,2) NOT NULL DEFAULT 0.00,
@@ -262,37 +262,37 @@ CREATE TABLE IF NOT EXISTS tbl_ASSIGNMENT_QUIZ (
 	PRIMARY KEY (id, item_id, course_id),
 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_ASSIGNMENT(item_id, course_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
--- 																RESOURCE
-CREATE TABLE IF NOT EXISTS tbl_RESOURCE (
+-- 																LIBRARY_ENTRY
+CREATE TABLE IF NOT EXISTS tbl_LIBRARY_ENTRY (
 	id				INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	instructor_id	INT UNSIGNED NOT NULL,
+    title 			VARCHAR(256) NOT NULL,
 	url				VARCHAR(256) NOT NULL,
 	resource_type	VARCHAR(64),
 	status			BOOL DEFAULT FALSE,
 	uploaded_date	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	
+	UNIQUE (title),
 	PRIMARY KEY (id, instructor_id),
 	FOREIGN KEY (instructor_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- 																EMBEDDED_RESOURCE
-CREATE TABLE IF NOT EXISTS tbl_EMBEDDED_RESOURCE (
-	item_id			INT UNSIGNED NOT NULL,
-	course_id		INT UNSIGNED NOT NULL,
-	resource_id		INT UNSIGNED NOT NULL,
-	instructor_id	INT UNSIGNED NOT NULL,
-	title			VARCHAR(256),
-	
-	PRIMARY KEY (item_id, course_id, instructor_id, resource_id),
-	FOREIGN KEY (item_id, course_id) REFERENCES tbl_LECTURE(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (resource_id, instructor_id) REFERENCES tbl_RESOURCE(id, instructor_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
--- 																UNCACHED_RESOURCE
-CREATE TABLE IF NOT EXISTS tbl_UNCACHED_RESOURCE (
+-- CREATE TABLE IF NOT EXISTS tbl_EMBEDDED_RESOURCE (
+-- 	item_id			INT UNSIGNED NOT NULL,
+-- 	course_id		INT UNSIGNED NOT NULL,
+-- 	resource_id		INT UNSIGNED NOT NULL,
+-- 	instructor_id	INT UNSIGNED NOT NULL,
+-- 	title			VARCHAR(256),
+-- 	
+-- 	PRIMARY KEY (item_id, course_id, instructor_id, resource_id),
+-- 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_LECTURE(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE,
+-- 	FOREIGN KEY (resource_id, instructor_id) REFERENCES tbl_RESOURCE(id, instructor_id) ON DELETE CASCADE ON UPDATE CASCADE
+-- );
+-- 																RESOURCE
+CREATE TABLE IF NOT EXISTS tbl_RESOURCE (
 	item_id 	INT UNSIGNED NOT NULL,
 	course_id	INT UNSIGNED NOT NULL,
-	title		VARCHAR(256),
+	title		VARCHAR(256) NOT NUll,
 	url			VARCHAR(256) NOT NULL,
-
 	PRIMARY KEY (item_id, course_id, title, url),
 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_LECTURE(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -363,7 +363,7 @@ CREATE TABLE IF NOT EXISTS tbl_ANSWER (
 	user_id			INT UNSIGNED NOT NULL,
 	content			LONGTEXT,
 	created_date	TIMESTAMP,
-	PRIMARY KEY (question_id, id),
+	PRIMARY KEY (id, question_id),
 	FOREIGN KEY (question_id) REFERENCES tbl_QUESTION(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

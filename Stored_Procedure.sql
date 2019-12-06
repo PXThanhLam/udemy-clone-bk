@@ -2,6 +2,14 @@ USE DBS_Assignment;
 DROP PROCEDURE IF EXISTS insertUser;
 DROP PROCEDURE IF EXISTS insertCategory;
 DROP PROCEDURE IF EXISTS insertCourse;
+DROP PROCEDURE IF EXISTS message;
+DROP PROCEDURE IF EXISTS insertAnnouncement;
+DROP PROCEDURE IF EXISTS insertSection;
+DROP PROCEDURE IF EXISTS insertItem;
+DROP PROCEDURE IF EXISTS insertLecture;
+DROP PROCEDURE IF EXISTS insertVideo;
+DROP PROCEDURE IF EXISTS addCaption;
+DROP PROCEDURE IF EXISTS insertTeacher;
 DELIMITER $$
 CREATE PROCEDURE insertUser(
 	IN em VARCHAR(256),
@@ -94,16 +102,7 @@ BEGIN
     VALUES (arg_course_id, arg_instructor_id, arg_content);
 END
 $$
-CREATE PROCEDURE insertAnnouncement(
-    arg_course_id INT UNSIGNED,
-	arg_instructor_id INT UNSIGNED,
-    arg_content TEXT
-)
-BEGIN
-	INSERT INTO tbl_ANNOUNCEMENT(course_id, instructor_id, content)
-    VALUES (arg_course_id, arg_instructor_id, arg_content);
-END
-$$
+
 CREATE PROCEDURE insertSection(
 	arg_course_id INT UNSIGNED,
     arg_section_name VARCHAR(256),
@@ -118,4 +117,55 @@ BEGIN
     INSERT INTO tbl_section(course_id, name, section_order)
     VALUES (arg_course_id, arg_section_name, arg_section_order);
 END
-
+$$
+CREATE PROCEDURE insertItem(
+	arg_course_id INT UNSIGNED,
+    arg_name VARCHAR(256)
+)
+BEGIN
+	INSERT INTO tbl_ITEM(course_id, name)
+    VALUES (arg_course_id, arg_name);
+END
+$$
+CREATE PROCEDURE insertLecture(
+	arg_course_id INT UNSIGNED,
+    arg_name VARCHAR(256)
+)
+BEGIN
+	CALL insertItem(arg_course_id, arg_name);
+    INSERT INTO tbl_LECTURE
+    VALUES (LAST_INSERT_ID(), arg_course_id);
+END
+$$
+CREATE PROCEDURE insertVideo(
+	arg_course_id INT UNSIGNED,
+    previewable BOOL,
+    arg_duration DECIMAL(5,2),
+    arg_url VARCHAR(256),
+    arg_name VARCHAR(256)
+)
+BEGIN 
+	CALL insertLecture(arg_course_id, arg_name);
+    INSERT INTO tbl_VIDEO
+    VALUES (LAST_INSERT_ID(), arg_course_id, IFNULL(previewable, DEFAULT(is_previewable)), arg_duration, arg_url);
+END
+$$
+CREATE PROCEDURE addCaption(
+	arg_course_id INT UNSIGNED,
+	arg_item_name VARCHAR(256),
+    list_of_captions VARCHAR(256) #"('English', 'vtt'), ('Spanish', 'another_vtt')"
+)
+BEGIN
+	DECLARE arg_item_id INT UNSIGNED;
+	SELECT item_id INTO arg_item_id	
+    FROM tbl_item
+    WHERE name=arg_item_name;
+    SET @location = LOCATE("(", list_of_captions);
+    WHILE  @location > 0 DO
+		SELECT INSERT(list_of_captions, @location+1, 0, CONCAT(arg_item_id, ", ", arg_course_id, ", "));
+        SET @location = LOCATE("(", list_of_captions, @location+1);
+    END WHILE;
+	SET @sql = CONCAT("INSERT INTO tbl_caption VALUES ", list_of_captions);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+END
