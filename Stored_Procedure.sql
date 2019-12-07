@@ -19,7 +19,7 @@ CREATE PROCEDURE insertUser(
 )
 BEGIN
 	INSERT INTO tbl_USER(email, password, first_name, last_name)
-	VALUES (em, pw, fname, lname);
+	VALUES (em, sha2(pw,256), fname, lname);
 END
 $$
 CREATE PROCEDURE insertCategory(
