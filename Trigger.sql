@@ -11,7 +11,8 @@ BEGIN
 	INSERT INTO tbl_TEACH
 	VALUES (NEW.owner_id, NEW.id, DEFAULT, DEFAULT);
     IF (NEW.price < 0.0) THEN
-		SET NEW.price = DEFAULT(tbl_course.price);
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Price is below zero';
 	END IF;
 END
 $$
