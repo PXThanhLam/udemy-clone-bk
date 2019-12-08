@@ -28,3 +28,7 @@ WHERE item_id IN
 (SELECT item_id FROM tbl_compose WHERE course_id_item IN 
 	(SELECT id AS course_id_item FROM tbl_course WHERE main_title = 'Learn Database System')
 );
+
+SELECT content 
+FROM tbl_announcement
+WHERE instructor_id in (SELECT id FROM tbl_user WHERE email = 'instructor@udemy.com')
