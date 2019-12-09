@@ -26,9 +26,7 @@ FROM tbl_COURSE AS tc, tbl_CAPTION AS tcap
 WHERE tcap.caption_language = "English" AND tcap.caption_language = "Italiano" AND tc.id = tcap.course_id;
 
 -- Liet ke nhung Section trong Course co main_title = "Angular 8 - The Complete Guide"
-SELECT ts.name
-FROM tbl_SECTION AS ts, tbl_COURSE AS tc
-WHERE ts.course_id = tc.id
+
 
 -- Liet ke nhung Student da Enroll vao Course co main_title = "Learn Ethical Hacking From Scratch"
 SELECT tu.*

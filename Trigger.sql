@@ -1,10 +1,18 @@
 USE DBS_Assignment;
+
+DROP TRIGGER IF EXISTS trg_answer;
+DROP TRIGGER IF EXISTS trg_message;
+DROP TRIGGER IF EXISTS trg_update_teach;
+DROP TRIGGER IF EXISTS trg_insertUser;
+DROP TRIGGER IF EXISTS trg_deleteCourse;
+DROP TRIGGER IF EXISTS trg_insertCourse;
+
 DELIMITER $$
 CREATE TRIGGER trg_insertCourse
 BEFORE INSERT
-ON tbl_course FOR EACH ROW
+ON tbl_COURSE FOR EACH ROW
 BEGIN
-	IF (SELECT instructor_flag FROM tbl_user WHERE id = NEW.owner_id) IS FALSE 
+	IF (SELECT instructor_flag FROM tbl_USER WHERE id = NEW.owner_id) IS FALSE 
 		THEN SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'User is not a instructor';
 	END IF;
@@ -13,9 +21,9 @@ END
 $$
 CREATE TRIGGER trg_deleteCourse
 BEFORE DELETE
-ON tbl_course FOR EACH ROW
+ON tbl_COURSE FOR EACH ROW
 BEGIN
-	IF EXISTS (SELECT * FROM tbl_ENROLL WHERE course_id=NEW.id AND is_archive=FALSE) THEN
+	IF EXISTS (SELECT * FROM tbl_ENROLL WHERE course_id=OLD.id AND is_archive=FALSE) THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Can not delete. Some users still enroll and has not yet archived';
 	END IF;
@@ -23,12 +31,12 @@ END
 $$
 CREATE TRIGGER trg_insertUser
 BEFORE INSERT
-ON tbl_user FOR EACH ROW
+ON tbl_USER FOR EACH ROW
 BEGIN
 	DECLARE pw VARCHAR(256);
-    SET pw = NEW.pw;
+    SET pw = NEW.password;
 	IF (pw REGEXP '.*[0-9].*'  and pw REGEXP '.*[A-Za-z].*' and pw REGEXP "[^ ]*[!@#$%^&'][^ ]*" and CHAR_LENGTH(pw) >= 8)  THEN
-		SET NEW.pw = SHA2(pw, 256);
+		SET NEW.password = SHA2(pw, 256);
 	ELSE SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT='Password must contains at least a number, an alphabetical character and a special character';
     END IF;
@@ -40,11 +48,11 @@ END
 $$
 CREATE TRIGGER trg_update_teach
 AFTER UPDATE
-ON tbl_teach FOR EACH ROW
+ON tbl_TEACH FOR EACH ROW
 BEGIN
-	SET @total_share = (SELECT SUM(share) FROM tbl_teach WHERE course_id=NEW.course_id);
+	SET @total_share = (SELECT SUM(share) FROM tbl_TEACH WHERE course_id=NEW.course_id);
     IF @total_share > 100.00 THEN
-		UPDATE tbl_teach
+		UPDATE tbl_TEACH
         SET share=100.00 * (share / @total_share)
         WHERE course_id = NEW.course_id;
 	END IF;
@@ -65,15 +73,15 @@ END
 $$
 CREATE TRIGGER trg_message
 BEFORE INSERT
-ON tbl_message FOR EACH ROW
+ON tbl_MESSAGE FOR EACH ROW
 # check to_id is in a course of from_id
 BEGIN
 	IF NEW.to_id IN (SELECT DISTINCT instructor_id
 		FROM tbl_TEACH
-		WHERE course_id IN (SELECT * FROM tbl_enroll WHERE user_id = from_id)) 
+		WHERE course_id IN (SELECT * FROM tbl_ENROLL WHERE user_id = from_id)) 
     OR NEW.from_id IN (SELECT DISTINCT instructor_id
 		FROM tbl_TEACH
-		WHERE course_id IN (SELECT * FROM tbl_enroll WHERE user_id = to_id))
+		WHERE course_id IN (SELECT * FROM tbl_ENROLL WHERE user_id = to_id))
     THEN SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Student not in your course';
     END IF;
@@ -82,15 +90,15 @@ $$
 
 CREATE TRIGGER trg_answer
 BEFORE INSERT
-ON tbl_answer FOR EACH ROW
+ON tbl_ANSWER FOR EACH ROW
 BEGIN 
-	IF NOT EXISTS (SELECT * FROM tbl_enroll e WHERE e.user_id = NEW.user_id) THEN
-		SET @course_id = (SELECT course_id FROM tbl_question WHERE id=NEW.question_id);
-		IF NOT EXISTS (SELECT * FROM tbl_teach WHERE course_id=@course_id AND instructor_id=NEW.user_id) THEN
+	IF NOT EXISTS (SELECT * FROM tbl_ENROLL e WHERE e.user_id = NEW.user_id) THEN
+		SET @course_id = (SELECT course_id FROM tbl_QUESTION WHERE id=NEW.question_id);
+		IF NOT EXISTS (SELECT * FROM tbl_TEACH WHERE course_id=@course_id AND instructor_id=NEW.user_id) THEN
 			SIGNAL SQLSTATE '45000'
 			SET MESSAGE_TEXT = 'Illegal answer. This user is not a student or teacher of this course.';
         END IF;
-		IF (SELECT permission FROM tbl_teach t WHERE t.course_id = 
+		IF (SELECT permission FROM tbl_TEACH t WHERE t.course_id = 
 		@course_id AND t.instructor_id = NEW.user_id) & b'00001000' = b'00000000' THEN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'This instructor does not have permission';
