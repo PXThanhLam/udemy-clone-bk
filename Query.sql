@@ -85,3 +85,28 @@ instructor_id IN (SELECT id FROM tbl_USER WHERE email = "vuongcuong@gmail.com")
 AND 
 course_id IN (SELECT id FROM tbl_COURSE WHERE main_title = "The Web Developer Bootcamp");
 
+-- 																	AGGREATE QUERY
+
+-- Liet ke 10 course co rating cao nhat sap xep theo rating
+SELECT c.id, AVG(rating) as average_rating
+FROM tbl_COURSE c, tbl_ENROLL e
+WHERE c.id = e.course_id
+GROUP BY c.id
+ORDER BY average_rating
+LIMIT 10;
+
+-- Liet ke 10 topic thinh hanh nhat trong 1 subcategory "Math" sap xep theo do thinh hanh
+SELECT t.topic, COUNT(*) AS popularity
+FROM tbl_COURSE_TOPIC t, tbl_ENROLL e
+WHERE t.course_id = e.course_id AND t.course_id IN (SELECT c.id FROM tbl_COURSE c, tbl_SUBCATEGORY s WHERE c.sub_category_id = s.id AND c.name="Math")
+GROUP BY t.topic
+ORDER BY popularity
+LIMIT 10;
+
+-- find the total number of distinct course student in each category
+SELECT cate.name, COUNT(DISTINCT e.user_id)
+FROM tbl_COURSE c, tbl_SUBCATEGORY s, tbl_ENROLL e, tbl_CATEGORY cate
+WHERE s.category_id=cate.id AND c.sub_category_id=s.id AND e.course_id=c.id
+GROUP BY cate.name;
+
+--

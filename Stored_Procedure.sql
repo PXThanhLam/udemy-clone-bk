@@ -322,7 +322,8 @@ EVERY 1 HOUR
 COMMENT 'Coupon expired'
 DO
 BEGIN
-DELETE FROM tbl_COUPON WHERE expired_date > NOW();
+	CALL checkPrimaryCoupon();
+	DELETE FROM tbl_COUPON WHERE expired_date > NOW();
 END
 $$
 

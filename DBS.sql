@@ -152,7 +152,6 @@ CREATE TABLE IF NOT EXISTS tbl_COMPOSE (
 CREATE TABLE IF NOT EXISTS tbl_LECTURE (
 	item_id				INT UNSIGNED NOT NULL,
 	course_id 			INT UNSIGNED NOT NULL,
-	name				VARCHAR(256) NOT NULL DEFAULT "Default Lecture's name",
 	
 	PRIMARY KEY (item_id, course_id),
     FOREIGN KEY (item_id, course_id) REFERENCES tbl_ITEM(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE

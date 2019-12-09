@@ -3,7 +3,7 @@ USE DBS_Assignment;
 DROP TRIGGER IF EXISTS trg_answer;
 DROP TRIGGER IF EXISTS trg_message;
 DROP TRIGGER IF EXISTS trg_update_teach;
-DROP TRIGGER IF EXISTS trg_insertUser;
+DROP TRIGGER IF EXISTS trg_insertUser;	
 DROP TRIGGER IF EXISTS trg_deleteCourse;
 DROP TRIGGER IF EXISTS trg_insertCourse;
 
