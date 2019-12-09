@@ -38,7 +38,7 @@ CREATE PROCEDURE loginUser(
 )
 BEGIN
 	SELECT COUNT(*)
-    FROM tbl_user
+    FROM tbl_USER
     WHERE email=arg_email AND passowrd=SHA2(arg_password,256);
 END
 $$
@@ -86,7 +86,7 @@ BEGIN
         arg_sub_category_id);
 	SET last_course_id=LAST_INSERT_ID();
     INSERT INTO tbl_TEACH
-	VALUES (arg_owner_id, last_course_id, DEFAULT(tbl_teach.share), DEFAULT(tbl_teach.permission));
+	VALUES (arg_owner_id, last_course_id, DEFAULT(tbl_TEACH.permission), DEFAULT(tbl_TEACH.share));
    
     IF arg_topic IS NOT NULL THEN
 		CREATE TEMPORARY TABLE topic_value(val VARCHAR(1024));
@@ -96,7 +96,7 @@ BEGIN
 		INSERT INTO tbl_COURSE_TOPIC
 		SELECT last_course_id, val
         FROM topic_value;
-        DROP TABLE topic_value;
+        DROP TEMPORARY TABLE topic_value;
 	END IF;
 END
 $$
@@ -141,7 +141,7 @@ $$
 -- 	SELECT COUNT(*)+1 INTO arg_section_order
 -- 	FROM tbl_SECTION
 -- 	WHERE course_id=arg_course_id;
--- 	INSERT INTO tbl_section(course_id, name, section_order)
+-- 	INSERT INTO tbl_SECTION(course_id, name, section_order)
 -- 	VALUES (arg_course_id, arg_section_name, arg_section_order);
 -- END
 -- $$
@@ -185,14 +185,14 @@ CREATE PROCEDURE addCaption(
 BEGIN
 	DECLARE arg_item_id INT UNSIGNED;
 	SELECT item_id INTO arg_item_id	
-    FROM tbl_item
+    FROM tbl_ITEM
     WHERE name=arg_item_name;
     SET @location = LOCATE("(", list_of_captions);
     WHILE  @location > 0 DO
 		SET list_of_captions = INSERT(list_of_captions, @location+1, 0, CONCAT(arg_item_id, ", ", arg_course_id, ", "));
         SET @location = LOCATE("(", list_of_captions, @location+1);
     END WHILE;
-	SET @sql = CONCAT("INSERT INTO tbl_caption VALUES ", list_of_captions);
+	SET @sql = CONCAT("INSERT INTO tbl_CAPTION VALUES ", list_of_captions);
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
 END
@@ -205,14 +205,14 @@ CREATE PROCEDURE addResource(
 BEGIN
 	DECLARE arg_item_id INT UNSIGNED;
 	SELECT item_id INTO arg_item_id	
-    FROM tbl_item
+    FROM tbl_ITEM
     WHERE name=arg_item_name;
     SET @location = LOCATE("(", list_of_resources);
     WHILE  @location > 0 DO
 		SET list_of_resources= INSERT(list_of_captions, @location+1, 0, CONCAT(arg_item_id, ", ", arg_course_id, ", "));
         SET @location = LOCATE("(", list_of_resources, @location+1);
     END WHILE;
-	SET @sql = CONCAT("INSERT INTO tbl_resource VALUES ", list_of_resources);
+	SET @sql = CONCAT("INSERT INTO tbl_RESOURCE VALUES ", list_of_resources);
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
 END
@@ -255,7 +255,7 @@ CREATE PROCEDURE insertQuiz(
 )
 BEGIN
 	START TRANSACTION;
-		INSERT INTO tbl_quiz(item_id, course_id, content, knowledge_area)
+		INSERT INTO tbl_QUIZ(item_id, course_id, content, knowledge_area)
 		VALUES (arg_item_id, arg_course_id, arg_content, arg_knowledege_area);
 		SET @inserted_id = LAST_INSERT_ID();
 		SET @location = LOCATE("(", list_of_answers);
@@ -264,7 +264,7 @@ BEGIN
 				", ", arg_course_id, ", "));
 			SET @location = LOCATE("(", list_of_answers, @location+1);
 		END WHILE;
-		SET @sql = CONCAT("INSERT INTO tbl_quiz_answer VALUES ", list_of_answers);
+		SET @sql = CONCAT("INSERT INTO tbl_QUIZ_ANSWER VALUES ", list_of_answers);
 		PREPARE stmt FROM @sql;
 		EXECUTE stmt;
     COMMIT;
@@ -315,17 +315,17 @@ CREATE PROCEDURE enrollCourse(
     arg_paid_price DECIMAL(10,2)
 )
 BEGIN
-	IF EXISTS (SELECT * FROM tbl_teach WHERE course_id=arg_course_id AND instructor_id=arg_user_id) THEN
+	IF EXISTS (SELECT * FROM tbl_TEACH WHERE course_id=arg_course_id AND instructor_id=arg_user_id) THEN
 		 SIGNAL SQLSTATE '45000'
 		 SET MESSAGE_TEXT = 'Instructor cannot enroll';
     END IF;
-	INSERT INTO tbl_enroll(user_id, course_id, paid_price)
+	INSERT INTO tbl_ENROLL(user_id, course_id, paid_price)
     VALUES (arg_user_id, arg_course_id, arg_paid_price);
-    SET @welcome_message = (SELECT welcome_message FROM tbl_course WHERE id=arg_course_id);
+    SET @welcome_message = (SELECT welcome_message FROM tbl_COURSE WHERE id=arg_course_id);
     IF @welcome_message IS NOT NULL THEN
-		INSERT INTO tbl_message(from_id, to_id, content)
+		INSERT INTO tbl_MESSAGE(from_id, to_id, content)
         SELECT owner_id, arg_user_id, welcome_message
-        FROM tbl_course
+        FROM tbl_COURSE
         WHERE id=arg_course_id;
     END IF;
 END

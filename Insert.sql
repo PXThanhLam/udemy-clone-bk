@@ -41,7 +41,7 @@ INSERT INTO tbl_USER(
 	last_name
 ) VALUES (
 	"vuongcuong@gmail.com",
-	"bautroitucach",
+	"PPGC%ja&_8",
 	"Cuong",
 	"Vuong"
 );
@@ -54,7 +54,7 @@ INSERT INTO tbl_USER(
 	headline
 ) VALUES (
 	"quan.db.2709@gmail.com",
-	"bestjungle2019",
+	"44LVcJaR^o",
 	"Quan",
 	"DB",
 	"0346809059"
@@ -69,7 +69,7 @@ INSERT INTO tbl_USER (
 	instructor_flag
 ) VALUES (
 	"quan.tran@gmail.com",
-	"12345678",
+	"6aDHp4Am^x",
 	"Quan",
 	"Hoang Hot",
 	"udemy-clone.com",
@@ -85,7 +85,7 @@ INSERT INTO tbl_USER (
 	instructor_flag
 ) VALUES (
 	"anh.thin@gmail.com",
-	"thinmmtttss",
+	"!)e8IgsdRc",
 	"Thin",
 	"Super",
 	"Vietnamese",
@@ -100,7 +100,7 @@ INSERT INTO tbl_USER (
 	profile_setting
 ) VALUES (
 	"dat.nguyen@gmail.com",
-	"passwordnaylacuadat",
+	"29RFwxep!Q",
 	"Dat",
 	"Nguyen Duong Minh Tam",
 	TRUE
@@ -114,7 +114,7 @@ INSERT INTO tbl_USER (
 	profile_picture
 ) VALUES (
 	"lam.daihiep@gmail.com",
-	"nhapthecuudoi",
+	"_jX!a6nf0n",
 	"Lam",
 	"DH",
 	"lamdh.jpg"
@@ -128,7 +128,7 @@ INSERT INTO tbl_USER (
 	facebook
 ) VALUES (
 	"user_test@gmail.com",
-	"testpassword",
+	"$BAFZdp*3*",
 	"Nguoi dung",
 	"Thu nghiem",
 	"facebook.com/usertest"
@@ -142,7 +142,7 @@ INSERT INTO tbl_USER (
 	youtube
 ) VALUES (
 	"youtuber@gmail.com",
-	"youtuberchuyennghiep",
+	"ZjTedhof!0",
 	"Youtuber",
 	"Chuyen nghiep",
 	"youtube.com/youtuberchuyennghiep"
@@ -158,7 +158,7 @@ INSERT INTO tbl_USER (
 	instructor_flag
 ) VALUES (
 	"tri.dang@gmail.com",
-	"tridanginfo",
+	"At&2DL56*9",
 	"Tri",
 	"Dang",
 	"tridang.info",
@@ -175,7 +175,7 @@ INSERT INTO tbl_USER (
 	instructor_flag
 ) VALUES (
 	"best.leesin@gmail.com",
-	"nguoichoidirung",
+	"Pq!0CCac4S",
 	"Quan",
 	"DB",
 	"Tôi là người chơi đi rừng của team PPL, nhiệm vụ của tôi là F2W với chỉ số damage gây ra không tưởng thua cả con sp!",
@@ -215,44 +215,31 @@ INSERT INTO tbl_SUBCATEGORY(name, category_id) VALUES ("Operating System", 4);
 -- SELECT * FROM tbl_SUBCATEGORY ORDER BY id;
 
 -- 													===== COURSE =====
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("James-Golden", "Thomas PLC", "Star usually quite have oil leg age. Moment energy dark car real mention. Might two forward see. Attack receive age special yet society spend.", TRUE, "https://smith.com/", "https://placeimg.com/422/726/any", 19.99, "Admit whom would return Mrs approach miss. Data think step wear care. Address recognize shake off surface.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Jordan-Graham", "Moore PLC", "Activity whether area yard top say. Piece away far charge large develop culture draw.Speak subject dinner try read thing. Watch collection to story require. Ok write though whether back really.", TRUE, "http://www.martin.net/", "https://placeimg.com/875/136/any", 19.99, "Teacher left girl light look idea. Build drive stop stock government. Everybody building indicate small partner store.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Tucker, Miller and Rogers", "Perkins, Zimmerman and Snow", "Another before resource indicate somebody perform system find. Door ten notice run end build happen difficult. Easy within then particularly school heart. Defense PM movie arrive push hope.", TRUE, "http://brown.com/", "https://dummyimage.com/990x835", 19.99, "Board there shoulder expert full answer. Buy interview try method bad. Them word head program. Buy senior public quite. Officer that prove service.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Allison, Campbell and Watson", "King, Bell and Rivera", "Teach necessary try year night approach form. Manager letter option lose Congress recognize source. Choice cut main red walk impact trade. Friend fish catch country middle fish.", TRUE, "https://peters-yoder.info/", "https://dummyimage.com/464x678", 19.99, "Space affect hospital weight drive expect. A reach crime learn. Fill create alone remain blood cup anything rather. Now whether raise part future together less.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Osborne, Lowe and Green", "Nelson-Montes", "What this father father enough positive never. Thing total term mean. Prepare gun go phone. Activity take beautiful pull prove. Today entire push.", TRUE, "https://townsend.com/", "https://placeimg.com/268/514/any", 19.99, "American couple coach have notice education. Another edge treatment seem color right late. Eat trouble similar bed policy performance side. Heart story rise PM way. Seat language least.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Davis-Powell", "Whitney-Schwartz", "Must occur choice trial source kind usually. President measure remember difficult often tonight attention. That fight name attention threat. Man for treat quality. Way world hold other everybody.", TRUE, "https://kline-nelson.org/", "https://placekitten.com/249/976", 19.99, "Debate note film cultural. Popular school everything above member help seem. You two example. Bad animal have often. Of beyond kind summer without quality kitchen wrong. Exist economy free score.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Li, Singleton and Parker", "Thompson-Craig", "Low which father second both. Develop I reflect pattern traditional may possible far. Ago spring better guess. Including short fast shake. Reach character however tough institution training.", TRUE, "https://day-mayer.net/", "https://placekitten.com/856/757", 19.99, "Within system attention truth individual measure. Conference series such hotel bank painting lose. View baby strategy experience result. Forget news machine.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Price-Anderson", "Richardson, Brown and Martinez", "Consider back former may. Represent Republican budget. Move professional return organization pretty order very. Join even interest. Can rich key war. Rather laugh film.", TRUE, "https://jones.biz/", "https://www.lorempixel.com/770/360", 19.99, "Service wonder experience ability. Administration action store whom prevent single age skin. Best rise value factor world adult. Different anyone if note. So husband forward piece.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Baker and Sons", "Thompson, Flores and Butler", "Type different room. Check would edge general scene would. Thank six build scientist.", TRUE, "https://kim.com/", "https://placeimg.com/868/470/any", 19.99, "Commercial watch media like family. Officer many evidence authority. South by body design side reality but. Table onto describe remain happen. Want pick amount our than.", 9, 1);
--- 
--- INSERT INTO tbl_COURSE(main_title, sub_title, description, publish_status, promotional_video, image, price, welcome_message, owner_id, sub_category_id) VALUES ("Rodriguez, Williams and Smith", "Brady and Sons", "Student city follow modern. By sort bill glass at act street. Community move quality organization have lay. Certainly available letter word vote.", TRUE, "https://www.martinez.info/", "https://www.lorempixel.com/377/550", 19.99, "Toward new they pretty property trouble. Man you travel student.", 9, 1);
+-- CALL insertCourse(:arg_main_title, :arg_sub_title, :arg_description, :arg_promotional_video, :arg_image, :arg_course_language, :arg_course_level, :arg_price, :arg_welcome_message, :owner_email, :sub_category_name, :arg_topic);
 
+CALL insertCourse("Roy LLC", "Lee-Kennedy", "Stand person certainly start no lot development training.", "http://www.hunt.net/", "https://dummyimage.com/80x787", "Aruba", "Expert", 19.99, "Easy hit forward them leave food image. Ready how what close individual goal dinner.", "tri.dang@gmail.com", "Web Development", "'Python'");
 
+CALL insertCourse("Bailey Ltd", "Thompson, Knapp and Fitzgerald", "Top pull fall into anyone can. True stage on professor ability continue carry. Unit identify wait war trial husband group.", "http://lang.com/", "https://dummyimage.com/371x70", "Somalia", "All Levels", 19.99, "Phone medical tend difference these development rich. By sign majority. Painting true since offer. Second because by.", "tri.dang@gmail.com", "Web Development", "'Python'");
 
--- SELECT * FROM tbl_COURSE ORDER BY id;
+CALL insertCourse("Jackson, Lee and Barry", "Harrison Inc", "Fast east best plant address notice responsibility. Bar together relate effort table positive alone. Light growth to hand.", "https://brown.com/", "https://placeimg.com/500/603/any", "Monaco", "Intermidate", 19.99, "Country include record chance house let dark. Wear meet I treat. Ever these build business painting after.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Adams-Miller", "Ward, Thompson and Trevino", "Former political manage professional hope none base. Should summer reach parent. Think many interest hot treat score.", "https://kennedy.com/", "https://placeimg.com/245/673/any", "Vanuatu", "Beginner", 19.99, "Huge beyond other build federal wish try. Necessary direction prevent. Protect chair ready wind scene.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Cook, Hicks and Olson", "Clarke, Garcia and Gross", "Detail practice professional. Kid lay picture expect style watch.", "https://www.meyer.com/", "https://placeimg.com/833/94/any", "Uruguay", "Intermidate", 19.99, "Animal show successful old. Live huge police movement issue want.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Ballard, Rice and Freeman", "Lopez, Green and Downs", "Son should grow behind. Guess much majority fund author.", "https://hart.com/", "https://dummyimage.com/601x736", "Brunei Darussalam", "All Levels", 19.99, "Partner international test position. Amount house spring lose put resource crime. Authority maintain office unit buy page.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Holmes, Foley and Rhodes", "Snyder-Pope", "Your skin mention develop paper defense particularly. Candidate see relate. Tell evening she success.", "https://serrano-rush.com/", "https://placekitten.com/531/187", "Timor-Leste", "Expert", 19.99, "Second top minute people. Must doctor staff often assume treat strong. Experience important tax sea similar.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Robinson-Walker", "Garcia, Colon and Cobb", "There represent trouble good cause own economic. Later into mother ball. And others simply control great sit one.", "http://mercado.com/", "https://placekitten.com/232/87", "Sweden", "Intermidate", 19.99, "Local day full notice. Listen seat husband require.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Stevens, Clark and Sanders", "Simpson Inc", "Western across sell cultural. Actually never data change high.", "http://www.campbell-brewer.com/", "https://placekitten.com/324/568", "Greece", "Expert", 19.99, "See administration shake general population. Lot its staff network partner reach can during. Democratic stay above state.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+CALL insertCourse("Short-Cochran", "Davenport-Graves", "Pass other four team often. Far money speak Congress. Trade piece street city such.", "http://www.chen-reed.com/", "https://placeimg.com/697/18/any", "Sri Lanka", "All Levels", 19.99, "Bill plant exist major born if. Up end official true.", "tri.dang@gmail.com", "Web Development", "'Python'");
+
+SELECT * FROM tbl_COURSE ORDER BY id;
 
 -- 													===== COURSE_TOPIC =====
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (1, "Python");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (2, "JavaScript");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (4, "Java");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (3, "Unity");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (2, "Vue.JS");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (2, "PHP");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (1, "Django");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (3, "C#");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (4, "Android Development");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (5, "Machine Learning");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (8, "Machine Learning");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (5, "Python");
-INSERT INTO tbl_COURSE_TOPIC(course_id, topic) VALUES (6, "WordPress");
 
 -- SELECT * FROM tbl_COURSE_TOPIC ORDER BY course_id;
 
