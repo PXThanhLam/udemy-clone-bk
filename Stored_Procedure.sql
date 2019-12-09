@@ -11,15 +11,26 @@ DROP PROCEDURE IF EXISTS insertVideo;
 DROP PROCEDURE IF EXISTS addCaption;
 DROP PROCEDURE IF EXISTS insertTeacher;
 DELIMITER $$
-CREATE PROCEDURE insertUser(
-	IN em VARCHAR(256),
-    IN pw VARCHAR(256),
-    IN fname VARCHAR(128),
-    in lname VARCHAR(128)
+-- CREATE PROCEDURE insertUser(
+-- 	IN em VARCHAR(256),
+--     IN pw VARCHAR(256),
+--     IN fname VARCHAR(128),
+--     in lname VARCHAR(128)
+-- )
+-- BEGIN
+-- 	INSERT INTO tbl_USER(email, password, first_name, last_name)
+-- 	VALUES (em, pw, fname, lname);
+-- END
+-- $$
+
+CREATE PROCEDURE loginUser(
+	arg_email VARCHAR(256),
+    arg_password VARCHAR(256)
 )
 BEGIN
-	INSERT INTO tbl_USER(email, password, first_name, last_name)
-	VALUES (em, pw, fname, lname);
+	SELECT *
+    FROM tbl_user
+    WHERE email=arg_email AND passowrd=SHA2(arg_password,256);
 END
 $$
 CREATE PROCEDURE insertCategory(
@@ -65,6 +76,8 @@ BEGIN
 		IFNULL(arg_course_language,DEFAULT(course_language)), IFNULL(arg_course_level,DEFAULT(course_level)), IFNULL(arg_price,DEFAULT(price)), arg_welcome_message, arg_owner_id, 
         arg_sub_category_id);
 	SET last_course_id=LAST_INSERT_ID();
+    INSERT INTO tbl_TEACH
+	VALUES (arg_owner_id, last_course_id, DEFAULT(tbl_course.share), DEFAULT(tbl_course.permission));
 	IF arg_topic IS NOT NULL THEN
 		INSERT INTO tbl_COURSE_TOPIC
 		VALUES (last_course_id, arg_topic);
@@ -72,52 +85,50 @@ BEGIN
 END
 $$
 
-CREATE PROCEDURE message(
-	arg_from_id INT UNSIGNED,
-    arg_to_id INT UNSIGNED,
-    arg_content LONGTEXT
-)
-BEGIN 
-	INSERT INTO tbl_MESSAGE(from_id, to_id, content)
-    VALUES (arg_from_id, arg_to_id, arg_content);
-END
+-- CREATE PROCEDURE message(
+-- 	arg_from_id INT UNSIGNED,
+--     arg_to_id INT UNSIGNED,
+--     arg_content LONGTEXT
+-- )
+-- BEGIN 
+-- 	INSERT INTO tbl_MESSAGE(from_id, to_id, content)
+--     VALUES (arg_from_id, arg_to_id, arg_content);
+-- END
+-- $$
+-- CREATE PROCEDURE insertTeacher(
+-- 	arg_instructor_id INT UNSIGNED,
+--     arg_course_id INT UNSIGNED,
+--     arg_permission BIT(8),
+--     arg_share DECIMAL(5,2)
+-- )
+-- 	INSERT INTO tbl_TEACH(instructor_id, course_id, permission)
+--     VALUES (arg_instructor_id, arg_course_id, arg_permssion);
+-- END
 $$
-CREATE PROCEDURE insertTeacher(
-	arg_instructor_id INT UNSIGNED,
-    arg_course_id INT UNSIGNED,
-    arg_permission BIT(8)
-)
-BEGIN
-	INSERT INTO tbl_TEACH(instructor_id, course_id, permission)
-    VALUES (arg_instructor_id, arg_course_id, arg_permssion);
-END
-$$
-CREATE PROCEDURE insertAnnouncement(
-    arg_course_id INT UNSIGNED,
-	arg_instructor_id INT UNSIGNED,
-    arg_content TEXT
-)
-BEGIN
-	INSERT INTO tbl_ANNOUNCEMENT(course_id, instructor_id, content)
-    VALUES (arg_course_id, arg_instructor_id, arg_content);
-END
-$$
+-- CREATE PROCEDURE insertAnnouncement(
+--     arg_course_id INT UNSIGNED,
+-- 	arg_instructor_id INT UNSIGNED,
+--     arg_content TEXT
+-- )
+-- BEGIN
+-- 	INSERT INTO tbl_ANNOUNCEMENT(course_id, instructor_id, content)
+--     VALUES (arg_course_id, arg_instructor_id, arg_content);
+-- END
+-- $$
 
-CREATE PROCEDURE insertSection(
-	arg_course_id INT UNSIGNED,
-    arg_section_name VARCHAR(256),
-	arg_section_order INT UNSIGNED
-)
-BEGIN
-	IF arg_section_order IS NULL THEN
-		SELECT COUNT(*)+1 INTO arg_section_order
-        FROM tbl_SECTION, tbl_COURSE
-        WHERE id=course_id;
-	END IF;
-    INSERT INTO tbl_section(course_id, name, section_order)
-    VALUES (arg_course_id, arg_section_name, arg_section_order);
-END
-$$
+-- CREATE PROCEDURE insertSection(
+-- 	arg_course_id INT UNSIGNED,
+--     arg_section_name VARCHAR(256)
+-- )
+-- BEGIN
+-- 	DECLARE arg_section_order INT UNSIGNED;
+-- 	SELECT COUNT(*)+1 INTO arg_section_order
+-- 	FROM tbl_SECTION
+-- 	WHERE course_id=arg_course_id;
+-- 	INSERT INTO tbl_section(course_id, name, section_order)
+-- 	VALUES (arg_course_id, arg_section_name, arg_section_order);
+-- END
+-- $$
 CREATE PROCEDURE insertItem(
 	arg_course_id INT UNSIGNED,
     arg_name VARCHAR(256)
@@ -139,10 +150,10 @@ END
 $$
 CREATE PROCEDURE insertVideo(
 	arg_course_id INT UNSIGNED,
+	arg_name VARCHAR(256),
     previewable BOOL,
     arg_duration DECIMAL(5,2),
-    arg_url VARCHAR(256),
-    arg_name VARCHAR(256)
+    arg_url VARCHAR(256)
 )
 BEGIN 
 	CALL insertLecture(arg_course_id, arg_name);
@@ -162,10 +173,113 @@ BEGIN
     WHERE name=arg_item_name;
     SET @location = LOCATE("(", list_of_captions);
     WHILE  @location > 0 DO
-		SELECT INSERT(list_of_captions, @location+1, 0, CONCAT(arg_item_id, ", ", arg_course_id, ", "));
+		SET list_of_captions = INSERT(list_of_captions, @location+1, 0, CONCAT(arg_item_id, ", ", arg_course_id, ", "));
         SET @location = LOCATE("(", list_of_captions, @location+1);
     END WHILE;
 	SET @sql = CONCAT("INSERT INTO tbl_caption VALUES ", list_of_captions);
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
 END
+$$
+CREATE PROCEDURE addResource(
+	arg_course_id INT UNSIGNED,
+	arg_item_name VARCHAR(256),
+    list_of_resources VARCHAR(256) #"('title1', 'url'), ('title2', 'url')"
+)
+BEGIN
+	DECLARE arg_item_id INT UNSIGNED;
+	SELECT item_id INTO arg_item_id	
+    FROM tbl_item
+    WHERE name=arg_item_name;
+    SET @location = LOCATE("(", list_of_resources);
+    WHILE  @location > 0 DO
+		SET list_of_resources= INSERT(list_of_captions, @location+1, 0, CONCAT(arg_item_id, ", ", arg_course_id, ", "));
+        SET @location = LOCATE("(", list_of_resources, @location+1);
+    END WHILE;
+	SET @sql = CONCAT("INSERT INTO tbl_resource VALUES ", list_of_resources);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+END
+$$
+CREATE PROCEDURE insertVideoSlide(
+	arg_course_id INT UNSIGNED,
+    arg_duration DECIMAL(5,2),
+    arg_slide_url VARCHAR(256),
+	arg_video_url VARCHAR(256),
+    arg_sync_url VARCHAR(256)
+)
+BEGIN
+	CALL insertLecture(arg_course_id, arg_name);
+    INSERT INTO tbl_VIDEO_SLIDE
+    VALUES (LAST_INSERT_ID(), arg_course_id, arg_slide_url, arg_sync_url, 
+		arg_video_url, IFNULL(arg_duration, DEFAULT(duration)));
+END
+$$
+CREATE PROCEDURE insertPTQ(
+	arg_course_id INT UNSIGNED,
+    arg_item_name VARCHAR(256),
+    arg_mimimum_score INT,
+    arg_is_randomize BOOL,
+    arg_description LONGTEXT
+)
+BEGIN
+	CALL insertItem(arg_course_id, arg_item_name);
+    INSERT INTO tbl_PTQ
+    VALUES (LAST_INSERT_ID(), arg_course_id, arg_minimum_score, arg_is_randomize, 
+		arg_description);
+END
+$$
+CREATE PROCEDURE insertQuiz(
+	arg_item_id INT UNSIGNED,
+    arg_course_id INT UNSIGNED,
+    arg_content LONGTEXT,
+    arg_knowledge_area VARCHAR(64),
+    list_of_answers VARCHAR(256) #"('The frog is an animal', 1), ('The frog is a thing', 0)"
+)
+BEGIN
+	START TRANSACTION;
+		INSERT INTO tbl_quiz(item_id, course_id, content, knowledge_area)
+		VALUES (arg_item_id, arg_course_id, arg_content, arg_knowledege_area);
+		SET @inserted_id = LAST_INSERT_ID();
+		SET @location = LOCATE("(", list_of_answers);
+		WHILE  @location > 0 DO
+			SET list_of_answers = INSERT(list_of_captions, @location+1, 0, CONCAT(@inserted_id, ", ", arg_item_id, 
+				", ", arg_course_id, ", "));
+			SET @location = LOCATE("(", list_of_answers, @location+1);
+		END WHILE;
+		SET @sql = CONCAT("INSERT INTO tbl_quiz_answer VALUES ", list_of_answers);
+		PREPARE stmt FROM @sql;
+		EXECUTE stmt;
+    COMMIT;
+END
+$$
+CREATE PROCEDURE checkPrimaryCoupon()
+BEGIN
+	DECLARE v_done BOOL DEFAULT FALSE;
+    DECLARE v_coupon_code CHAR(10);
+	DECLARE cursorForCoupon CURSOR FOR 
+    SELECT 
+		coupon_code
+	FROM
+		tbl_COUPON
+	WHERE 
+		is_primary=TRUE AND expired_date < NOW();
+	
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done=TRUE;
+	OPEN cursorForCoupon;
+	START TRANSACTION;
+	read_loop: LOOP
+		FETCH cursorForCoupon INTO v_coupon_code;
+        IF v_done THEN
+			LEAVE read_loop;
+		END IF;
+        INSERT IGNORE INTO tbl_DISCOUNT
+        SELECT course_id, v_coupon_code
+        FROM tbl_COURSE;
+	END LOOP;
+    COMMIT;
+    CLOSE cursorForCoupon;
+END
+$$
+
+

@@ -8,10 +8,16 @@ BEGIN
 		THEN SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'User is not a instructor';
 	END IF;
-	INSERT INTO tbl_TEACH
-	VALUES (NEW.owner_id, NEW.id, DEFAULT, DEFAULT);
-    IF (NEW.price < 0.0) THEN
-		SET NEW.price = DEFAULT(tbl_course.price);
+	
+END
+$$
+CREATE TRIGGER trg_deleteCourse
+BEFORE DELETE
+ON tbl_course FOR EACH ROW
+BEGIN
+	IF EXISTS (SELECT * FROM tbl_ENROLL WHERE course_id=NEW.id AND is_archive=FALSE) THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Can not delete. Some users still enroll and has not yet archived';
 	END IF;
 END
 $$
@@ -22,7 +28,7 @@ BEGIN
 	DECLARE pw VARCHAR(256);
     SET pw = NEW.pw;
 	IF (pw REGEXP '.*[0-9].*'  and pw REGEXP '.*[A-Za-z].*' and pw REGEXP "[^ ]*[!@#$%^&'][^ ]*" and CHAR_LENGTH(pw) >= 8)  THEN
-		UPDATE tbl_user AS u SET u.pw = SHA2(pw, 256) WHERE u.id = NEW.id;
+		SET NEW.pw = SHA2(pw, 256);
 	ELSE SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT='Password must contains at least a number, an alphabetical character and a special character';
     END IF;
@@ -32,14 +38,29 @@ BEGIN
 	END IF;
 END
 $$
-CREATE TRIGGER trg_teach
-BEFORE INSERT
+CREATE TRIGGER trg_update_teach
+AFTER UPDATE
 ON tbl_teach FOR EACH ROW
 BEGIN
-	IF (SELECT instructor_flag FROM tbl_user WHERE id = NEW.instructor_id) IS FALSE
-    THEN SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'User is not an instructor';
+	SET @total_share = (SELECT SUM(share) FROM tbl_teach WHERE course_id=NEW.course_id);
+    IF @total_share > 100.00 THEN
+		UPDATE tbl_teach
+        SET share=100.00 * (share / @total_share)
+        WHERE course_id = NEW.course_id;
+	END IF;
+    IF NEW.permission | b'01111111' = b'01111111' AND (NEW.permission & 
+		b'00001000' = b'00001000' OR NEW.permission & b'00000100' = b'00000100') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Instructor not visible cant have review or qa permission';
+	END IF;
+    IF new.permission & b'01000000' = b'01000000'  AND NEW.permission | b'11011111' = b'11011111' THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Instructor with managed permission will have caption permission';
     END IF;
+    IF NEW.share > 0.0  AND NEW.permission | b'11111110' = b'11111110' THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Instructor with share > 0 can view report';
+    END IF; 
 END
 $$
 CREATE TRIGGER trg_message
@@ -58,4 +79,22 @@ BEGIN
     END IF;
 END
 $$
-CREATE TRIGGER trg_
+
+CREATE TRIGGER trg_answer
+BEFORE INSERT
+ON tbl_answer FOR EACH ROW
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM tbl_enroll e WHERE e.user_id = NEW.user_id) THEN
+		SET @course_id = (SELECT course_id FROM tbl_question WHERE id=NEW.question_id);
+		IF NOT EXISTS (SELECT * FROM tbl_teach WHERE course_id=@course_id AND instructor_id=NEW.user_id) THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Illegal answer. This user is not a student or teacher of this course.';
+        END IF;
+		IF (SELECT permission FROM tbl_teach t WHERE t.course_id = 
+		@course_id AND t.instructor_id = NEW.user_id) & b'00001000' = b'00000000' THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'This instructor does not have permission';
+        END IF;
+    END IF;
+END
+
