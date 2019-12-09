@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS DBS_Assignment;
-SET GLOBAL event_scheduler = ON;
+
 CREATE DATABASE IF NOT EXISTS DBS_Assignment CHARACTER SET utf8;
 
 USE DBS_Assignment;

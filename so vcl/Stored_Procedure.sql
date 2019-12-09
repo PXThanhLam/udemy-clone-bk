@@ -28,9 +28,14 @@ CREATE PROCEDURE loginUser(
     arg_password VARCHAR(256)
 )
 BEGIN
+<<<<<<< HEAD
 	SELECT *
     FROM tbl_user
     WHERE email=arg_email AND passowrd=SHA2(arg_password,256);
+=======
+	INSERT INTO tbl_USER(email, password, first_name, last_name)
+	VALUES (em, sha2(pw,256), fname, lname);
+>>>>>>> 2bda550a455b5a9f474a2b78ed20c716c22d3691
 END
 $$
 CREATE PROCEDURE insertCategory(
@@ -77,7 +82,7 @@ BEGIN
         arg_sub_category_id);
 	SET last_course_id=LAST_INSERT_ID();
     INSERT INTO tbl_TEACH
-	VALUES (arg_owner_id, last_course_id, DEFAULT(tbl_teach.share), DEFAULT(tbl_teach.permission));
+	VALUES (arg_owner_id, last_course_id, DEFAULT(tbl_course.share), DEFAULT(tbl_course.permission));
 	IF arg_topic IS NOT NULL THEN
 		INSERT INTO tbl_COURSE_TOPIC
 		VALUES (last_course_id, arg_topic);
@@ -282,33 +287,4 @@ BEGIN
 END
 $$
 
-CREATE EVENT IF NOT EXISTS expiredEvent
-ON SCHEDULE
-EVERY 1 HOUR
-COMMENT 'Coupon expired'
-DO
-BEGIN
-DELETE FROM tbl_COUPON WHERE expired_date > NOW();
-END
-$$
 
-CREATE PROCEDURE enrollCourse(
-	arg_user_id INT UNSIGNED,
-    arg_course_id INT UNSIGNED,
-    arg_paid_price DECIMAL(10,2)
-)
-BEGIN
-	IF EXISTS (SELECT * FROM tbl_teach WHERE course_id=arg_course_id AND instructor_id=arg_user_id) THEN
-		 SIGNAL SQLSTATE '45000';
-		 SET MESSAGE_TEXT = 'Instructor cannot enroll';
-    END IF;
-	INSERT INTO tbl_enroll(user_id, course_id, paid_price)
-    VALUES (arg_user_id, arg_course_id, arg_paid_price);
-    SET @welcome_message = (SELECT welcome_message FROM tbl_course WHERE id=arg_course_id);
-    IF @welcome_message IS NOT NULL THEN
-		INSERT INTO tbl_message(from_id, to_id, content)
-        SELECT owner_id, arg_user_id, welcome_message
-        FROM tbl_course
-        WHERE id=arg_course_id;
-    END IF;
-END
