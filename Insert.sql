@@ -1,6 +1,11 @@
 USE DBS_Assignment;
 
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE tbl_DISCOUNT;
+TRUNCATE TABLE tbl_AFFECTED_BY;
+TRUNCATE TABLE tbl_COUPON;
+TRUNCATE TABLE tbl_SHOPPING_CART_COURSE;
+TRUNCATE TABLE tbl_SHOPPING_CART;
 TRUNCATE TABLE tbl_CONTEXT;
 TRUNCATE TABLE tbl_ANSWER;
 TRUNCATE TABLE tbl_QUESTION;
@@ -10,13 +15,13 @@ TRUNCATE TABLE tbl_FINISH;
 TRUNCATE TABLE tbl_MESSAGE;
 TRUNCATE TABLE tbl_RESOURCE;
 TRUNCATE TABLE tbl_LIBRARY_ENTRY;
-TRUNCATE TABLE tbl_ASSIGNMENT_QUIZ;
-TRUNCATE TABLE tbl_ASSIGNMENT;
+-- TRUNCATE TABLE tbl_ASSIGNMENT_QUIZ;
+-- TRUNCATE TABLE tbl_ASSIGNMENT;
 TRUNCATE TABLE tbl_CODING_EXERCISE;
 TRUNCATE TABLE tbl_QUIZ_ANSWER;
 TRUNCATE TABLE tbl_QUIZ;
 TRUNCATE TABLE tbl_PTQ;
-TRUNCATE TABLE tbl_ARTICAL;
+TRUNCATE TABLE tbl_ARTICLE;
 TRUNCATE TABLE tbl_VIDEO_SLIDE;
 TRUNCATE TABLE tbl_CAPTION;
 TRUNCATE TABLE tbl_LECTURE;
@@ -215,8 +220,6 @@ INSERT INTO tbl_SUBCATEGORY(name, category_id) VALUES ("Operating System", 4);
 -- SELECT * FROM tbl_SUBCATEGORY ORDER BY id;
 
 -- 													===== COURSE =====
--- CALL insertCourse(:arg_main_title, :arg_sub_title, :arg_description, :arg_promotional_video, :arg_image, :arg_course_language, :arg_course_level, :arg_price, :arg_welcome_message, :owner_email, :sub_category_name, :arg_topic);
-
 CALL insertCourse("Roy LLC", "Lee-Kennedy", "Stand person certainly start no lot development training.", "http://www.hunt.net/", "https://dummyimage.com/80x787", "Aruba", "Expert", 19.99, "Easy hit forward them leave food image. Ready how what close individual goal dinner.", "tri.dang@gmail.com", "Web Development", "'Python'");
 
 CALL insertCourse("Bailey Ltd", "Thompson, Knapp and Fitzgerald", "Top pull fall into anyone can. True stage on professor ability continue carry. Unit identify wait war trial husband group.", "http://lang.com/", "https://dummyimage.com/371x70", "Somalia", "All Levels", 19.99, "Phone medical tend difference these development rich. By sign majority. Painting true since offer. Second because by.", "tri.dang@gmail.com", "Web Development", "'Python'");
@@ -237,10 +240,9 @@ CALL insertCourse("Stevens, Clark and Sanders", "Simpson Inc", "Western across s
 
 CALL insertCourse("Short-Cochran", "Davenport-Graves", "Pass other four team often. Far money speak Congress. Trade piece street city such.", "http://www.chen-reed.com/", "https://placeimg.com/697/18/any", "Sri Lanka", "All Levels", 19.99, "Bill plant exist major born if. Up end official true.", "tri.dang@gmail.com", "Web Development", "'Python'");
 
-SELECT * FROM tbl_COURSE ORDER BY id;
+-- SELECT * FROM tbl_COURSE ORDER BY id;
 
 -- 													===== COURSE_TOPIC =====
-
 -- SELECT * FROM tbl_COURSE_TOPIC ORDER BY course_id;
 
 -- 													===== ANNOUNCEMENT =====
@@ -266,6 +268,172 @@ INSERT INTO tbl_ANNOUNCEMENT(course_id, instructor_id, content) VALUES (1, 1, "M
 
 -- SELECT * FROM tbl_ANNOUNCEMENT ORDER BY id;
 
+-- 													===== ITEM =====
+-- 													----- VIDEO -----
+CALL insertVideo(1, "News anyone force compare.", FALSE, 30.00, "https://obrien.biz/");
+
+CALL insertVideo(1, "Third including face picture.", FALSE, 15.00, "http://vazquez.info/");
+
+CALL insertVideo(1, "White must able.", FALSE, 17.30, "http://harris.biz/");
+
+CALL insertVideo(1, "Eat hold fast how heart.", FALSE, 25.00, "http://www.ramirez.com/");
+
+CALL insertVideo(1, "So event water religious.", FALSE, 10.00, "https://www.stark.com/");
+
+CALL insertVideo(1, "At trade often reality.", FALSE, 12.00, "https://www.anderson.com/");
+
+CALL insertVideo(1, "This including know shoulder.", FALSE, 7.00, "https://www.ray.com/");
+
+CALL insertVideo(1, "Former play member cold.", FALSE, 8.00, "https://chen-goodwin.com/");
+
+CALL insertVideo(1, "News show end prevent let.", FALSE, 4.00, "https://williams.com/");
+
+CALL insertVideo(1, "Value leg wonder idea per when.", FALSE, 16.00, "https://www.harrington.com/");
+
+-- SELECT * FROM tbl_VIDEO ORDER BY item_id;
+
+-- 													----- CAPTION -----
+CALL addCaption(1, "News anyone force compare.", "('Togo', 'https://www.odom-jones.info/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Albania', 'https://www.crosby-walker.info/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Estonia', 'https://ortiz.net/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Gambia', 'https://burgess.com/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Congo', 'http://www.myers.biz/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Tonga', 'http://www.peters.biz/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Barbados', 'http://www.torres.com/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Netherlands', 'http://townsend-watson.com/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Germany', 'https://www.hernandez.com/')");
+
+CALL addCaption(1, "News anyone force compare.", "('Panama', 'http://www.fowler.info/')");
+
+-- SELECT * FROM tbl_CAPTION ORDER BY item_id;
+
+-- 													----- VIDEO_SLIDE -----
+CALL insertVideoSlide(2, "Agent she store physical.", 20.00, "https://www.sullivan-adams.net/", "https://www.brown.biz/", "http://www.garner.info/");
+
+CALL insertVideoSlide(1, "Its heart happy major.", 15.00, "https://www.olsen.com/", "http://www.rodgers.com/", "https://whitaker.org/");
+
+CALL insertVideoSlide(3, "Trouble Mrs state item stay.", 17.00, "https://green-murphy.com/", "http://williams-russell.com/", "http://www.bentley-marsh.com/");
+
+CALL insertVideoSlide(4, "Mother third work.", 5.00, "http://barnett.com/", "https://rivera-burton.com/", "http://www.garcia-bowers.com/");
+
+CALL insertVideoSlide(2, "Yeah message kid exactly.", 10.00, "http://randall.org/", "https://stevens.com/", "https://www.bennett.biz/");
+
+CALL insertVideoSlide(2, "Commercial do doctor.", 7.00, "http://smith.com/", "http://www.mcdonald.org/", "http://www.baker.org/");
+
+CALL insertVideoSlide(6, "Guy baby should point.", 2.00, "https://www.hoffman.org/", "http://salazar.org/", "https://www.turner.com/");
+
+CALL insertVideoSlide(5, "Family process indeed.", 27.00, "https://www.morrow.info/", "https://www.santiago.info/", "https://benson.net/");
+
+CALL insertVideoSlide(7, "Run them how allow.", 30.00, "http://www.gonzales-alvarez.com/", "http://www.baker.net/", "https://frazier.com/");
+
+CALL insertVideoSlide(2, "Need represent whether hotel.", 15.00, "https://choi.com/", "http://www.brown.com/", "https://www.herman.org/");
+
+-- SELECT * FROM tbl_VIDEO_SLIDE ORDER BY item_id;
+
+-- 													----- ARTICLE -----
+CALL insertArticle(2, "Fish station weight reduce.", "Create argue wind truth. And court best approach daughter. Who score down. Morning western reveal ground year. Left response account rise. Old anyone bed north world program. Our technology week huge floor. Sound than item. Front somebody relationship instead idea movie sort. Skin something game girl lose across decade. Administration tax house foreign side specific government commercial. Tend relationship large. Onto others much raise list news.");
+
+CALL insertArticle(1, "Enter memory thank learn.", "Over cell none check. Total security other alone. Design chance reach establish. Son show hospital case. Use popular share a. Reduce data meeting continue suddenly economy. Purpose man choice soldier. Myself other piece summer indicate. Inside property listen message although spring. Majority evening rise ago operation. Quite quite seven view. Mother music major yes imagine attorney. Another performance show prove.");
+
+CALL insertArticle(3, "Letter wide company what man.", "The week room appear. Good go as source heart least traditional. Teacher then stock realize. Lot occur team maybe manager do. Difficult day current those time customer. Issue candidate true agree step deep. Car tough begin hit goal I bill later. Agree stop certainly. Likely write into. Laugh tax next outside group. Fall effort before trade guy. Company company reality people site. Yard care full military. High wind above light work notice.");
+
+CALL insertArticle(4, "Meeting network enough four.", "Whether choice doctor various. Operation plan boy finish well personal. Trouble deep practice player just wife into. Left program hotel official dog. About affect them anyone now theory least. Certainly order moment term series. Western appear style laugh. Child dark five TV meeting. Us government cell according. Class arm film he. Keep time common list if. Image account happy wall fill song. Note kind article should. Money standard letter boy they ago image.");
+
+CALL insertArticle(7, "Loss become standard set.", "Take keep story none themselves. Together you worry field. Executive experience find also strategy describe. May amount future party prepare. Role deal example beat law discuss different attack. Another people recently stage politics instead very. Choose magazine those treatment heavy speech. Control scene the floor force base part study. Oil couple meeting. Mean hundred new heart.");
+
+CALL insertArticle(1, "School citizen huge spend.", "Choice public mouth nice card upon their. Responsibility bring also help require. Nature child admit need. Minute international director training successful. Yeah evidence but month fear apply. Activity eye wish investment country director life. Between himself staff big here less. Produce firm paper administration door enjoy than especially. Method and fight. Bill first put. Mention together majority others dinner few. Activity purpose final. Team meeting yeah. Movement best recently accept board act.");
+
+CALL insertArticle(8, "Activity ok street teach.", "Foreign almost even where. Exist fall body around. Explain particular street think direction inside. Suggest traditional job deal south despite best near. Catch car large culture personal card generation bar. Through fall organization note. Others by stand character contain myself wait. You affect ability. Instead level special officer industry. Computer owner man these attention. Data time word thing summer claim. Poor never tax prevent discussion score clear.");
+
+CALL insertArticle(9, "Cold start laugh try economy.", "Force first why economy. Walk special office protect certainly also early. Without financial around draw. Continue take however research force. Technology structure present wind final. What suddenly join window. Treat as hope wind. Check parent store. Short newspaper series blood. Organization investment economy page. Prevent race across lawyer. Put because also happy effect. Do determine movie own some help voice time.");
+
+CALL insertArticle(10, "Next town major.", "Thing consumer nice drop network. Thank between decide body. Yet ok meet agency red nor whose. Any certain us oil take under offer door. Information wear per herself view structure top. Piece design fear participant. Item create resource return soldier throughout. Happy so doctor house rest as often commercial. The sort about five foot. Foreign institution up short. Science old reveal owner meet. Professor hot environment not.");
+
+CALL insertArticle(2, "Last remain music shake.", "Rate American TV difficult other reflect collection. International mean during special pretty kid develop. Change room both well. Deal food behavior investment measure physical throw. Claim same call recognize young own. Require do part marriage. Century instead similar. Through see glass usually. Also fill stock while let security training husband. Type so here could maintain performance such. Republican hand high example. To during remember approach why. From manager employee laugh player.");
+
+-- SELECT * FROM tbl_ARTICLE ORDER BY item_id;
+
+-- 													----- PTQ -----
+CALL insertPTQ(1, "Save north understand fill.", 0, TRUE, "Choice share need student. Avoid light care relate improve rise like. It back fine. Shake indicate face try name able have. Number you year company factor room production. Free it turn brother board worker. One road top that.");
+
+CALL insertPTQ(2, "Upon or pattern.", 0, TRUE, "Worker home different. Any wear hope product clear environment. Toward surface smile lawyer sea response wind. Side each for education I learn final. Machine however fill term natural national cut.");
+
+CALL insertPTQ(3, "The clearly suffer true.", 0, TRUE, "Social there nearly floor. Take piece attorney fast office while. Among raise determine soon forward. Rock hospital discover. Alone make sport agreement treatment. Skill movie quite shoulder issue structure manage.");
+
+CALL insertPTQ(4, "Decade office kind.", 0, TRUE, "Better among mother life glass will. Who bring fine bill radio. May hot skill again staff nice. No hard use through. History involve site offer realize figure six. Structure same part conference dog white.");
+
+CALL insertPTQ(5, "Prepare produce card agent.", 0, TRUE, "Myself money news professor customer by either. Politics watch others knowledge. Defense herself career view near. Late teacher stock. By this low teacher him as particular. Boy movement who decide for several. Style live floor manager similar.");
+
+CALL insertPTQ(10, "Present should exactly point.", 0, TRUE, "By with difficult decade who. And firm generation outside physical strong ahead. Eye sit soon red population want occur. End happy training add. Reality nation head yourself television nice others.");
+
+CALL insertPTQ(9, "Art morning above among.", 0, TRUE, "Any new cause however however thus process. Herself site Republican. Event response raise consumer structure wife. Bag benefit character your turn phone during exactly. Human than get charge remember realize their.");
+
+CALL insertPTQ(7, "Section tend the long.", 0, TRUE, "Network early election away bring word. Study behavior population memory quickly. Growth all attack military field it. Risk sit week let campaign. Evening in amount have dream week suffer.");
+
+CALL insertPTQ(6, "Far participant fire.", 0, TRUE, "Lead prove bit soldier near ready put. A adult toward. Leader decide necessary near believe. Campaign chance decade. Go tree hot simply less feel run. Peace issue seven. Establish interesting blood second leg race trip. May force why.");
+
+CALL insertPTQ(5, "Ago easy safe perform show bad.", 0, TRUE, "Direction step production visit meet find. Player audience charge add maybe lay. Evidence relate never Republican bag above. Environmental grow smile board suddenly. Ground black such heart yes. Never education million remember time southern short author.");
+
+-- SELECT * FROM tbl_PTQ ORDER BY item_id;
+
+-- 													----- QUIZ & QUIZ_ANSWER-----
+CALL insertQuiz(31, 1, "Notice church cup feeling author. Situation right star include yes American. Direction allow good skill.", "", "('The half significant today. Set left end western teach marriage arrive. Second Republican night whom test fight lot.', 1)");
+
+CALL insertQuiz(31, 1, "Everybody improve attack animal.", "", "('Response year pull nothing factor. Interview technology while discuss.', 1)");
+
+CALL insertQuiz(31, 1, "Everyone realize board difficult. International across daughter yeah. Simply body use just often history check short.", "", "('Especially town worker. Foot great crime dog. Available sport various mean place interview.', 1)");
+
+CALL insertQuiz(31, 1, "Win include eat husband college bit. Current remain reflect gun though care news.", "", "('Card stage two on market base trial. Recent exist character six program shake. Get ask action east nature might.', 1)");
+
+CALL insertQuiz(31, 1, "City section natural yourself protect. Network different require fish. Free already turn among social word fish.", "", "('Discuss tree partner choose suffer ability. Above course town sport car response.', 1)");
+
+CALL insertQuiz(31, 1, "Something method him point much book. Card opportunity far they cost media.", "", "('Little student on. Hope late event save fund stuff social under.', 1)");
+
+CALL insertQuiz(31, 1, "Wife measure improve eat special across gun. Oil forward though. Bring carry work interest.", "", "('Various weight already gas third summer. In painting society sell together country could hotel.', 1)");
+
+CALL insertQuiz(31, 1, "Resource contain try least. Cause sure phone conference maintain walk. Example himself son heart. Expert sit parent.", "", "('Drop around friend we as local. Past economic agreement those whole bring officer. Miss authority I former couple beyond.', 1)");
+
+CALL insertQuiz(31, 1, "Room student dark maintain.", "", "('Those while its task. Indicate example together.', 1)");
+
+CALL insertQuiz(31, 1, "Anyone network red dog. Hope among gas later throw. Goal machine recently yourself sister.", "", "('War describe player daughter strategy Congress physical others. Can discussion how physical less option.', 1)");
+
+-- SELECT * FROM tbl_QUIZ ORDER BY item_id;
+-- 
+-- SELECT * FROM tbl_QUIZ_ANSWER ORDER BY item_id;
+
+-- 													----- CODING_EXERCISE-----
+CALL insertCodingExercise(2, "Really next let these institution clear prevent all.", "https://www.wright.net/", "http://branch.biz/", "SQL");
+
+CALL insertCodingExercise(3, "Education local first great late.", "http://www.smith.com/", "http://waters.org/", "Python");
+
+CALL insertCodingExercise(4, "Still game possible follow for mind never.", "https://white.net/", "https://www.lane.org/", "Java");
+
+CALL insertCodingExercise(6, "Pass scientist peace save decide such.", "https://miller.biz/", "http://www.jacobson.com/", "C#");
+
+CALL insertCodingExercise(1, "Article often worker author federal. Stage describe form.", "https://cervantes.com/", "http://www.stevens-taylor.com/", "C++");
+
+CALL insertCodingExercise(10, "Shoulder natural song simply human team ability.", "http://www.williams.com/", "http://perry.com/", "C");
+
+CALL insertCodingExercise(9, "Also blue begin mention run city. Individual now to story.", "http://www.anderson-bailey.com/", "https://kirk.info/", "SQL");
+
+CALL insertCodingExercise(2, "Method easy our long task way matter.", "https://velazquez.com/", "http://www.patel.com/", "SQL");
+
+CALL insertCodingExercise(1, "While debate point sign sign color provide.", "http://www.higgins.com/", "https://www.hayes-howard.biz/", "JavaScript");
+
+CALL insertCodingExercise(5, "Recognize service contain two meeting.", "http://brooks-rose.org/", "https://williams.org/", "HTML");
+
+-- SELECT * FROM tbl_CODING_EXERCISE ORDER BY item_id;
+
+-- SELECT * FROM tbl_ITEM ORDER BY item_id;
+
 -- 													===== SECTION =====
 INSERT INTO tbl_SECTION(course_id, name, section_order) VALUES (1, "Smith Inc", 1);
 
@@ -288,6 +456,29 @@ INSERT INTO tbl_SECTION(course_id, name, section_order) VALUES (1, "Riddle, Bake
 INSERT INTO tbl_SECTION(course_id, name, section_order) VALUES (1, "Cummings-Castillo", 10);
 
 -- SELECT * FROM tbl_SECTION ORDER BY section_id;
+
+-- 													===== COMPOSE =====	
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (1, 1, 1, 1, 1);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (2, 1, 1, 1, 2);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (3, 1, 1, 1, 3);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (4, 1, 2, 1, 1);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (5, 1, 2, 1, 2);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (6, 1, 3, 1, 1);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (7, 1, 3, 1, 2);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (8, 1, 3, 1, 3);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (9, 1, 3, 1, 4);
+
+INSERT INTO tbl_COMPOSE(item_id, course_id_item, section_id, course_id_section, item_order)	VALUES (10, 1, 4, 1, 1);
+
+-- SELECT * FROM tbl_COMPOSE ORDER BY item_id;
 
 -- 													===== LIBRARY_ENTRY =====
 INSERT INTO tbl_LIBRARY_ENTRY(instructor_id, title, url) VALUES (9, "Johnson, Graves and Flores", "http://www.barr.com/");
@@ -312,30 +503,262 @@ INSERT INTO tbl_LIBRARY_ENTRY(instructor_id, title, url) VALUES (9, "Green-Freem
 
 -- SELECT * FROM tbl_LIBRARY_ENTRY ORDER BY id;
 
--- 													===== MESSAGE =====
--- INSERT INTO tbl_MESSAGE(from_id, to_id, content) VALUES (1, 1, "");
+-- 													===== RESOURCE =====
+CALL addResource(2, "Commercial do doctor.", "('Just total standard film behavior population.', 'http://www.arias.com/')");
 
+CALL addResource(2, "Commercial do doctor.", "('Experience matter knowledge return development military.', 'https://anderson.org/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Well single side camera.', 'http://www.sullivan.com/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Different positive recent truth. New sign expert buy rock card.', 'https://www.williams-collins.com/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Off machine appear human listen level they.', 'http://watts-hernandez.com/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Meeting fine record require take.', 'https://www.collins-gonzalez.org/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Measure figure join born specific whatever prepare.', 'https://moses.biz/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Oil spring green letter yes information audience race.', 'http://www.valdez-west.biz/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Central product official protect.', 'http://www.williams.net/')");
+
+CALL addResource(2, "Commercial do doctor.", "('Bad last social figure often idea opportunity build.', 'http://perez.com/')");
+
+-- SELECT * FROM tbl_RESOURCE ORDER BY item_id;
+
+-- 													===== ENROLL =====
+CALL enrollCourse(2, 1, 14.99);
+
+CALL enrollCourse(2, 2, 19.99);
+
+CALL enrollCourse(1, 3, 9.99);
+
+CALL enrollCourse(3, 4, 4.99);
+
+CALL enrollCourse(4, 4, 19.99);
+
+CALL enrollCourse(1, 6, 19.99);
+
+CALL enrollCourse(2, 6, 19.99);
+
+CALL enrollCourse(6, 1, 9.99);
+
+CALL enrollCourse(7, 2, 4.99);
+
+CALL enrollCourse(10, 9, 14.99);
+
+-- SELECT * FROM tbl_ENROLL ORDER BY user_id;
+
+-- 													===== FINISH =====
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(1, 1, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(1, 2, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(2, 2, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(3, 2, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(4, 1, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(6, 1, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(7, 6, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(4, 5, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(5, 2, 1);
+
+INSERT INTO tbl_FINISH(user_id, item_id, course_id) VALUES(1, 4, 1);
+
+-- SELECT * FROM tbl_FINISH ORDER BY user_id;
+
+-- 													===== MESSAGE =====
 -- SELECT * FROM tbl_MESSAGE ORDER BY from_id;
+
+-- 													===== TEACH =====
+-- SELECT * FROM tbl_TEACH ORDER BY instructor_id;
 
 -- 													===== QUESTION =====
 INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Cell professor his. Star candidate see question doctor reason.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Race show language western here eat thus. Get development get speak speak outside.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (2, 1, "Race show language western here eat thus. Get development get speak speak outside.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Score major whatever draw nor. Cut available sit. Increase listen despite help.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (3, 1, "Score major whatever draw nor. Cut available sit. Increase listen despite help.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Doctor evening including range gas minute important. Bit ever past form can where country.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (4, 1, "Doctor evening including range gas minute important. Bit ever past form can where country.");
 
 INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Customer civil science while. Always so majority week laugh. Not scene send relate for.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Education Republican quite degree begin father too. Second national cost ever whole style. Final since event talk.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (3, 1, "Education Republican quite degree begin father too. Second national cost ever whole style. Final since event talk.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Perform seven carry theory reality spend Mr art.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (4, 1, "Perform seven carry theory reality spend Mr art.");
 
 INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Than market great new life. Best push boy road. Author ground front good above truth nature quickly.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Very economic interview school consumer. Behavior morning source teach above seat drive hand.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (2, 1, "Very economic interview school consumer. Behavior morning source teach above seat drive hand.");
 
-INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (1, 1, "Wide all campaign key be. Education chance enter at call pay.");
+INSERT INTO tbl_QUESTION(student_id, course_id, content) VALUES (2, 1, "Wide all campaign key be. Education chance enter at call pay.");
 
-SELECT * FROM tbl_QUESTION ORDER BY id;
+-- SELECT * FROM tbl_QUESTION ORDER BY id;
+
+-- 													===== ANSWER =====
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (1, 3, "Activity body natural myself foot. Main debate if last wide service. Son lot study forward help use pretty consider.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (2, 1, "Second ok say our process tell public.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (3, 2, "Sometimes music economic play large second. Five move concern series.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (4, 6, "Where any thank. Nice interview them program change official even company. Dark field protect recently.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (5, 7, "Politics morning spend could book style popular force.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (6, 1, "Father let listen religious board yard government. Town want effort mention good. Event as second more how son.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (7, 2, "Young side event result position author. Manage main only truth trouble board. Century woman training fall but light attack.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (8, 3, "Natural glass other. Design clear hold others ball travel picture. Offer with hundred shoulder.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (9, 1, "Up responsibility political office ok top. Face surface owner put. Deal box method medical whom generation fish.");
+
+INSERT INTO tbl_ANSWER(question_id, user_id, content) VALUES (10, 2, "Keep development party evening impact fear. Health exactly today time expect.");
+
+-- SELECT * FROM tbl_ANSWER ORDER BY id;
+
+-- 													===== CONTEXT =====
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (1, 1, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (2, 2, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (3, 3, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (4, 4, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (5, 5, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (6, 6, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (7, 7, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (8, 8, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (9, 9, 1);
+
+INSERT INTO tbl_CONTEXT(question_id, item_id, course_id) VALUES (10, 10, 1);
+
+-- SELECT * FROM tbl_CONTEXT ORDER BY question_id;
+
+-- 													===== SHOPPING_CART =====
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (1);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (2);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (3);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (4);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (5);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (6);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (7);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (8);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (9);
+
+INSERT INTO tbl_SHOPPING_CART(user_id) VALUES (10);
+
+-- SELECT * FROM tbl_SHOPPING_CART ORDER BY id;
+
+-- 													===== SHOPPING_CART_COURSE =====
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (1, 1);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (2, 1);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (3, 5);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (4, 2);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (5, 6);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (6, 3);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (7, 8);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (8, 8);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (9, 10);
+
+INSERT INTO tbl_SHOPPING_CART_COURSE(shopping_cart_id, course_id) VALUES (10, 4);
+
+-- SELECT * FROM tbl_SHOPPING_CART_COURSE ORDER BY shopping_cart_id;
+
+-- 													===== COUPON =====
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("%1IxZf&G(@", 50.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("s#Ccf0hZ*8", 25.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("$UsQu*pba5", 60.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("(6WlC@iT14", 80.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("3SD+2XyrE$", 20.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("^W+3mGWug(", 50.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("6k4@rV$z@d", 10.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("m(96ZPgwCh", 5.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("s9J9O4dh)6", 75.00);
+
+INSERT INTO tbl_COUPON(coupon_code, discount_percentage) VALUES ("P0LHN3C0%i", 20.00);
+
+-- SELECT * FROM tbl_COUPON ORDER BY coupon_code;
+
+-- 													===== AFFECTED_BY =====
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (1, "%1IxZf&G(@");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (2, "^W+3mGWug(");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (3, "m(96ZPgwCh");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (4, "%1IxZf&G(@");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (5, "s9J9O4dh)6");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (6, "(6WlC@iT14");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (7, "s#Ccf0hZ*8");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (8, "3SD+2XyrE$");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (9, "P0LHN3C0%i");
+
+INSERT INTO tbl_AFFECTED_BY(shopping_cart_id, coupon_code) VALUES (10, "$UsQu*pba5");
+
+-- SELECT * FROM tbl_AFFECTED_BY ORDER BY shopping_cart_id;
+
+-- 													===== DISCOUNT =====
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (1, "P0LHN3C0%i");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (2, "$UsQu*pba5");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (3, "s#Ccf0hZ*8");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (4, "s9J9O4dh)6");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (5, "m(96ZPgwCh");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (6, "^W+3mGWug(");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (7, "P0LHN3C0%i");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (8, "%1IxZf&G(@");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (9, "s9J9O4dh)6");
+
+INSERT INTO tbl_DISCOUNT(course_id, coupon_code) VALUES (10, "3SD+2XyrE$");
+
+-- SELECT * FROM tbl_DISCOUNT ORDER BY course_id;
+
