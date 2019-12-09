@@ -60,7 +60,7 @@ CREATE PROCEDURE insertCourse(
     IN arg_welcome_message TEXT,
     IN owner_email VARCHAR(256),
     IN sub_category_name VARCHAR(256),
-	IN arg_topic VARCHAR(256)
+	IN arg_topic VARCHAR(256) #"'topic 1', 'topic 2'"
 )
 BEGIN
 	DECLARE arg_owner_id, arg_sub_category_id, last_course_id INT UNSIGNED;
@@ -78,9 +78,16 @@ BEGIN
 	SET last_course_id=LAST_INSERT_ID();
     INSERT INTO tbl_TEACH
 	VALUES (arg_owner_id, last_course_id, DEFAULT(tbl_teach.share), DEFAULT(tbl_teach.permission));
-	IF arg_topic IS NOT NULL THEN
+   
+    IF arg_topic IS NOT NULL THEN
+		CREATE TEMPORARY TABLE topic_value(val VARCHAR(1024));
+		SET @sql = CONCAT("INSERT INTO topic_value VALUES (", arg_topic, ")");
+		PREPARE stmt FROM @sql;
+		EXECUTE stmt;
 		INSERT INTO tbl_COURSE_TOPIC
-		VALUES (last_course_id, arg_topic);
+		SELECT last_course_id, val
+        FROM topic_value;
+        DROP TABLE topic_value;
 	END IF;
 END
 $$
