@@ -11,7 +11,7 @@ DROP PROCEDURE IF EXISTS insertLecture;
 DROP PROCEDURE IF EXISTS insertVideo;
 DROP PROCEDURE IF EXISTS addCaption;
 DROP PROCEDURE IF EXISTS insertTeacher;
-
+DROP PROCEDURE IF EXISTS loginUser;
 DELIMITER $$
 -- CREATE PROCEDURE insertUser(
 -- 	IN em VARCHAR(256),
@@ -30,26 +30,12 @@ CREATE PROCEDURE loginUser(
     arg_password VARCHAR(256)
 )
 BEGIN
-	SELECT *
+	SELECT id,email
     FROM tbl_user
     WHERE email=arg_email AND passowrd=SHA2(arg_password,256);
 END
 $$
-CREATE PROCEDURE insertCategory(
-	IN category_name VARCHAR(256),
-    IN sub_category_name VARCHAR(256)
-)
-BEGIN
-	DECLARE arg_category_id INT UNSIGNED;
-	INSERT INTO tbl_CATEGORY(name)
-    VALUES (category_name);
-    SELECT id INTO arg_category_id
-    FROM tbl_CATEGORY
-    WHERE name=category_name;
-    INSERT INTO tbl_SUBCATEGORY(name, category_id)
-    VALUES (sub_category_name, arg_category_id);
-END
-$$
+
 CREATE PROCEDURE insertCourse(
 	IN arg_main_title VARCHAR(256),
     IN arg_sub_title VARCHAR(256),
@@ -212,10 +198,23 @@ END
 $$
 CREATE PROCEDURE insertVideoSlide(
 	arg_course_id INT UNSIGNED,
+    arg_name VARCHAR(256),
     arg_duration DECIMAL(5,2),
     arg_slide_url VARCHAR(256),
 	arg_video_url VARCHAR(256),
     arg_sync_url VARCHAR(256)
+)
+BEGIN
+	CALL insertLecture(arg_course_id, arg_name);
+    INSERT INTO tbl_VIDEO_SLIDE
+    VALUES (LAST_INSERT_ID(), arg_course_id, arg_slide_url, arg_sync_url, 
+		arg_video_url, IFNULL(arg_duration, DEFAULT(duration)));
+END
+$$
+CREATE PROCEDURE insertArticle(
+	arg_course_id INT UNSIGNED,
+    arg_name VARCHAR(256),
+	arg_content LONGTEXT
 )
 BEGIN
 	CALL insertLecture(arg_course_id, arg_name);
@@ -308,7 +307,7 @@ CREATE PROCEDURE enrollCourse(
 )
 BEGIN
 	IF EXISTS (SELECT * FROM tbl_teach WHERE course_id=arg_course_id AND instructor_id=arg_user_id) THEN
-		 SIGNAL SQLSTATE '45000';
+		 SIGNAL SQLSTATE '45000'
 		 SET MESSAGE_TEXT = 'Instructor cannot enroll';
     END IF;
 	INSERT INTO tbl_enroll(user_id, course_id, paid_price)
@@ -321,3 +320,4 @@ BEGIN
         WHERE id=arg_course_id;
     END IF;
 END
+
