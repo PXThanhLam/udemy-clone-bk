@@ -8,6 +8,7 @@ BEGIN
 		THEN SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'User is not a instructor';
 	END IF;
+<<<<<<< HEAD
 	
 END
 $$
@@ -18,6 +19,13 @@ BEGIN
 	IF EXISTS (SELECT * FROM tbl_ENROLL WHERE course_id=NEW.id AND is_archive=FALSE) THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Can not delete. Some users still enroll and has not yet archived';
+=======
+	INSERT INTO tbl_TEACH
+	VALUES (NEW.owner_id, NEW.id, DEFAULT, DEFAULT);
+    IF (NEW.price < 0.0) THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Price is below zero';
+>>>>>>> 2bda550a455b5a9f474a2b78ed20c716c22d3691
 	END IF;
 END
 $$
@@ -26,12 +34,15 @@ BEFORE INSERT
 ON tbl_user FOR EACH ROW
 BEGIN
 	DECLARE pw VARCHAR(256);
+<<<<<<< HEAD
     SET pw = NEW.pw;
 	IF (pw REGEXP '.*[0-9].*'  and pw REGEXP '.*[A-Za-z].*' and pw REGEXP "[^ ]*[!@#$%^&'][^ ]*" and CHAR_LENGTH(pw) >= 8)  THEN
 		SET NEW.pw = SHA2(pw, 256);
 	ELSE SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT='Password must contains at least a number, an alphabetical character and a special character';
     END IF;
+=======
+>>>>>>> 2bda550a455b5a9f474a2b78ed20c716c22d3691
     IF (NEW.email REGEXP '^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$') IS FALSE THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Wrong email address';
@@ -70,15 +81,16 @@ ON tbl_message FOR EACH ROW
 BEGIN
 	IF NEW.to_id IN (SELECT DISTINCT instructor_id
 		FROM tbl_TEACH
-		WHERE course_id IN (SELECT * FROM tbl_enroll WHERE user_id = from_id)) 
+		WHERE course_id IN (SELECT course_id FROM tbl_enroll WHERE user_id = from_id)) 
     OR NEW.from_id IN (SELECT DISTINCT instructor_id
 		FROM tbl_TEACH
-		WHERE course_id IN (SELECT * FROM tbl_enroll WHERE user_id = to_id))
+		WHERE course_id IN (SELECT course_id FROM tbl_enroll WHERE user_id = to_id))
     THEN SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Student not in your course';
     END IF;
 END
 $$
+<<<<<<< HEAD
 
 CREATE TRIGGER trg_answer
 BEFORE INSERT
@@ -98,3 +110,24 @@ BEGIN
     END IF;
 END
 
+=======
+CREATE TRIGGER trg_insertFinish
+BEFORE INSERT
+ON tbl_finish FOR EACH ROW
+BEGIN
+	IF NEW.user_id IN (SELECT user_id FROM tbl_enroll e WHERE e.course_id = NEW.course_id) IS FALSE
+		THEN SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'User hasn\'t enroll course yet';
+    END IF;
+END
+$$
+CREATE TRIGGER trg_announcement 
+BEFORE INSERT 
+ON tbl_announcement FOR EACH ROW
+BEGIN
+	IF (SELECT permission FROM tbl_teach t WHERE t.course_id = NEW.course_id AND t.instructor_id = NEW.instructor_id) & b'10000000' = b'00000000'
+    THEN SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'User has not permission to anounce';
+    END IF;
+END
+>>>>>>> 2bda550a455b5a9f474a2b78ed20c716c22d3691
