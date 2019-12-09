@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS tbl_ITEM (
 	course_id	INT UNSIGNED NOT NULL,
     name 		VARCHAR(256) NOT NULL,
 	PRIMARY KEY (item_id, course_id),
-    UNIQUE(item_id, name),
+    UNIQUE(course_id, name),
 	FOREIGN KEY (course_id) REFERENCES tbl_COURSE(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- 																SECTION
@@ -144,7 +144,6 @@ CREATE TABLE IF NOT EXISTS tbl_COMPOSE (
 	course_id_section 	INT UNSIGNED NOT NULL,
 	item_order 			INT UNSIGNED NOT NULL,
 	PRIMARY KEY (course_id_item, item_id),
-    UNIQUE (item_order),
 	FOREIGN KEY (item_id, course_id_item) REFERENCES tbl_ITEM(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (section_id, course_id_section) REFERENCES tbl_SECTION(section_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -188,8 +187,8 @@ CREATE TABLE IF NOT EXISTS tbl_VIDEO_SLIDE (
 	PRIMARY KEY (item_id, course_id),
     FOREIGN KEY (item_id, course_id) REFERENCES tbl_LECTURE(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
--- 																ARTICAL
-CREATE TABLE IF NOT EXISTS tbl_ARTICAL (
+-- 																ARTICLE
+CREATE TABLE IF NOT EXISTS tbl_ARTICLE (
 	item_id		INT UNSIGNED NOT NULL,
 	course_id	INT UNSIGNED NOT NULL,
 	content		LONGTEXT NOT NULL,
@@ -219,7 +218,7 @@ CREATE TABLE IF NOT EXISTS tbl_QUIZ (
 	PRIMARY KEY (id, item_id, course_id),
 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_PTQ(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
--- 																RIGHT_ANSWER
+-- 																QUIZ_ANSWER
 CREATE TABLE IF NOT EXISTS tbl_QUIZ_ANSWER (
 	quiz_id		INT UNSIGNED NOT NULL,
 	item_id		INT UNSIGNED NOT NULL,
@@ -238,30 +237,30 @@ CREATE TABLE IF NOT EXISTS tbl_CODING_EXERCISE (
 	programming_language	VARCHAR(64) NOT NULL,
 	
 	PRIMARY KEY (item_id, course_id),
-    FOREIGN KEY (item_id, course_id) REFERENCES tbl_PTQ(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (item_id, course_id) REFERENCES tbl_ITEM(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- 																ASSIGNMENT
-CREATE TABLE IF NOT EXISTS tbl_ASSIGNMENT (
-	item_id					INT UNSIGNED NOT NULL,
-	course_id				INT UNSIGNED NOT NULL,
-	instruction				TEXT,
-	video					VARCHAR(256),
-	assignment_language 	VARCHAR(64),
-	
-	PRIMARY KEY (item_id, course_id),
-    FOREIGN KEY (item_id, course_id) REFERENCES tbl_PTQ(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+-- CREATE TABLE IF NOT EXISTS tbl_ASSIGNMENT (
+-- 	item_id					INT UNSIGNED NOT NULL,
+-- 	course_id				INT UNSIGNED NOT NULL,
+-- 	instruction				TEXT,
+-- 	video					VARCHAR(256),
+-- 	assignment_language 	VARCHAR(64),
+-- 	
+-- 	PRIMARY KEY (item_id, course_id),
+--     FOREIGN KEY (item_id, course_id) REFERENCES tbl_PTQ(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
+-- );
 -- 																ASSIGNMENT_QUIZ
-CREATE TABLE IF NOT EXISTS tbl_ASSIGNMENT_QUIZ (
-	id			INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	item_id		INT UNSIGNED NOT NULL,
-	course_id	INT UNSIGNED NOT NULL,
-	question	TEXT NOT NULL,
-	solution	TEXT,
-	
-	PRIMARY KEY (id, item_id, course_id),
-	FOREIGN KEY (item_id, course_id) REFERENCES tbl_ASSIGNMENT(item_id, course_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+-- CREATE TABLE IF NOT EXISTS tbl_ASSIGNMENT_QUIZ (
+-- 	id			INT UNSIGNED NOT NULL AUTO_INCREMENT,
+-- 	item_id		INT UNSIGNED NOT NULL,
+-- 	course_id	INT UNSIGNED NOT NULL,
+-- 	question	TEXT NOT NULL,
+-- 	solution	TEXT,
+-- 	
+-- 	PRIMARY KEY (id, item_id, course_id),
+-- 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_ASSIGNMENT(item_id, course_id) ON UPDATE CASCADE ON DELETE CASCADE
+-- );
 -- 																LIBRARY_ENTRY
 CREATE TABLE IF NOT EXISTS tbl_LIBRARY_ENTRY (
 	id				INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -298,11 +297,12 @@ CREATE TABLE IF NOT EXISTS tbl_RESOURCE (
 );
 -- 																MESSAGE
 CREATE TABLE IF NOT EXISTS tbl_MESSAGE (
+	id 				INT UNSIGNED AUTO_INCREMENT,
 	from_id			INT UNSIGNED NOT NULL,
 	to_id			INT UNSIGNED NOT NULL,
 	created_date	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	content			LONGTEXT NOT NULL,
-	PRIMARY KEY (from_id, to_id),
+	PRIMARY KEY (id, from_id, to_id),
 	FOREIGN KEY (from_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (to_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
@@ -363,7 +363,8 @@ CREATE TABLE IF NOT EXISTS tbl_ANSWER (
 	question_id		INT UNSIGNED NOT NULL,
 	user_id			INT UNSIGNED NOT NULL,
 	content			LONGTEXT,
-	created_date	TIMESTAMP,
+	created_date	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
 	PRIMARY KEY (id, question_id),
 	FOREIGN KEY (question_id) REFERENCES tbl_QUESTION(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -378,41 +379,42 @@ CREATE TABLE IF NOT EXISTS tbl_CONTEXT (
 	FOREIGN KEY (question_id) REFERENCES tbl_QUESTION(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (item_id, course_id) REFERENCES tbl_LECTURE(item_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+-- 																SHOPPING_CART
 CREATE TABLE IF NOT EXISTS tbl_SHOPPING_CART(
-	id INT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    user_id INT UNSIGNED  NOT NULL,
+	id 			INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    user_id 	INT UNSIGNED  NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (user_id) REFERENCES tbl_USER(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+-- 																SHOPPING_CART_COURSE
 CREATE TABLE IF NOT EXISTS tbl_SHOPPING_CART_COURSE(
-	shopping_cart_id INT UNSIGNED  NOT NULL,
-    course_id INT UNSIGNED  NOT NULL,
+	shopping_cart_id 	INT UNSIGNED  NOT NULL,
+    course_id 			INT UNSIGNED  NOT NULL,
     PRIMARY KEY(shopping_cart_id, course_id),
     FOREIGN KEY (shopping_cart_id) REFERENCES tbl_SHOPPING_CART(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (course_id) REFERENCES tbl_COURSE(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+-- 																COUPON
 CREATE TABLE IF NOT EXISTS tbl_COUPON(
-	coupon_code CHAR(10) NOT NULL,
-    expired_date TIMESTAMP NOT NULL,
+	coupon_code 		CHAR(10) NOT NULL,
+    expired_date 		TIMESTAMP NOT NULL DEFAULT (NOW() + INTERVAL 5 DAY),
     discount_percentage DECIMAL(5,2) NOT NULL,
-    is_primary BOOL,
+    is_primary 			BOOL DEFAULT TRUE,
     PRIMARY KEY(coupon_code),
     CONSTRAINT percentage_constraint CHECK (discount_percentage <= 80.00)
 );
-
+-- 																AFFECTED_BY
 CREATE TABLE IF NOT EXISTS tbl_AFFECTED_BY(
-	shopping_cart_id INT UNSIGNED NOT NULL,
-    coupon_code CHAR(10) NOT NULL,
+	shopping_cart_id 	INT UNSIGNED NOT NULL,
+    coupon_code 		CHAR(10) NOT NULL,
 	PRIMARY KEY (shopping_cart_id, coupon_code),
     FOREIGN KEY (shopping_cart_id) REFERENCES tbl_SHOPPING_CART(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (coupon_code) REFERENCES tbl_COUPON(coupon_code) ON DELETE CASCADE ON UPDATE CASCADE
 );
+-- 																DISCOUNT
 CREATE TABLE IF NOT EXISTS tbl_DISCOUNT(
-	course_id INT UNSIGNED NOT NULL,
-    coupon_code CHAR(10) NOT NULL,
+	course_id 		INT UNSIGNED NOT NULL,
+    coupon_code 	CHAR(10) NOT NULL,
     PRIMARY KEY (course_id, coupon_code),
     FOREIGN KEY (course_id) REFERENCES tbl_COURSE(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (coupon_code) REFERENCES tbl_COUPON(coupon_code) ON DELETE CASCADE ON UPDATE CASCADE

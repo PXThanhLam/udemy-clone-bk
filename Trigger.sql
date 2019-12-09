@@ -76,12 +76,13 @@ BEFORE INSERT
 ON tbl_MESSAGE FOR EACH ROW
 # check to_id is in a course of from_id
 BEGIN
-	IF NEW.to_id IN (SELECT DISTINCT instructor_id
+	IF NOT (NEW.to_id IN (SELECT DISTINCT instructor_id
 		FROM tbl_TEACH
-		WHERE course_id IN (SELECT * FROM tbl_ENROLL WHERE user_id = from_id)) 
+		WHERE course_id IN (SELECT course_id FROM tbl_ENROLL WHERE user_id = NEW.from_id)) 
     OR NEW.from_id IN (SELECT DISTINCT instructor_id
 		FROM tbl_TEACH
-		WHERE course_id IN (SELECT * FROM tbl_ENROLL WHERE user_id = to_id))
+		WHERE course_id IN (SELECT course_id FROM tbl_ENROLL WHERE user_id = NEW.to_id))
+	)
     THEN SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Student not in your course';
     END IF;

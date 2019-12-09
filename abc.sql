@@ -1,0 +1,1 @@
+DROP TEMPORARY TABLE topic_value;
