@@ -218,9 +218,35 @@ CREATE PROCEDURE insertArticle(
 )
 BEGIN
 	CALL insertLecture(arg_course_id, arg_name);
-    INSERT INTO tbl_VIDEO_SLIDE
-    VALUES (LAST_INSERT_ID(), arg_course_id, arg_slide_url, arg_sync_url, 
-		arg_video_url, IFNULL(arg_duration, DEFAULT(duration)));
+    INSERT INTO tbl_ARTICLE
+    VALUES (LAST_INSERT_ID(), arg_course_id, arg_content);
+END
+$$
+CREATE PROCEDURE insertCodingExercise(
+	arg_course_id INT UNSIGNED,
+    arg_item_name VARCHAR(256),
+    arg_initial_code VARCHAR(256),
+    arg_test_code VARCHAR(256),
+    arg_prog_language VARCHAR(256)
+)
+BEGIN
+	CALL insertItem(arg_course_id, arg_item_name);
+    INSERT INTO tbl_PTQ
+    VALUES (LAST_INSERT_ID(), arg_course_id, arg_intial_code, arg_test_code, arg_prog_language);
+END
+$$
+CREATE PROCEDURE insertPTQ(
+	arg_course_id INT UNSIGNED,
+    arg_item_name VARCHAR(256),
+    arg_mimimum_score INT,
+    arg_is_randomize BOOL,
+    arg_description LONGTEXT
+)
+BEGIN
+	CALL insertItem(arg_course_id, arg_item_name);
+    INSERT INTO tbl_PTQ
+    VALUES (LAST_INSERT_ID(), arg_course_id, arg_minimum_score, arg_is_randomize, 
+		arg_description);
 END
 $$
 CREATE PROCEDURE insertPTQ(
